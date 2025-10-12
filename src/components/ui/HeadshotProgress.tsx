@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export function HeadshotProgress({
   src,
-  alt = "Jason Moynihan",
+  alt = "Jordan Urbaez-Lu",
   size = 160,
   gap = 8,
   border = 2,

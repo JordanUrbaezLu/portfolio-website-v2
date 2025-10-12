@@ -8,8 +8,8 @@ import { HeadshotProgress } from "@/components/ui/HeadshotProgress";
 
 export function Home({
   registry,
-  name = "Hi, I'm Jason Moynihan",
-  title = "Frontend Developer & Founder crafting exceptional digital experiences with React, AI, Swift, and modern web technologies",
+  name = "Hi, I'm Jordan Urbaez-Lu",
+  title = "Senior Software Engineer with 7+ years of experience architecting, developing, and scaling high‑performance web applications, with deep expertise in React and Next.js",
 }: {
   registry: React.RefObject<Record<string, HTMLElement | null>>;
   name?: string;
@@ -58,7 +58,7 @@ export function Home({
           >
             <h1
               ref={nameRef}
-              className="text-6xl md:text-8xl font-light text-white mb-6 tracking-tight inline-block"
+              className="text-5xl md:text-7xl font-light text-white mb-6 tracking-tight inline-block"
             >
               {name}
             </h1>
@@ -94,8 +94,8 @@ export function Home({
           {/* Buttons */}
           <MotionReveal direction="up" delay={400}>
             <div className="flex gap-4 justify-center mt-8">
-              <Button href="#projects" variant="primary">
-                <span className="relative z-10">View Projects</span>
+              <Button href="#experience" variant="primary">
+                <span className="relative z-10">View Experience</span>
               </Button>
               <Button href="#contact" variant="outline">
                 Contact Me

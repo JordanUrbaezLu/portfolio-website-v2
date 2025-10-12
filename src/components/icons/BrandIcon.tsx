@@ -14,33 +14,18 @@ const ALIASES: Record<string, string> = {
   // Frontend
   react: "logos:react",
   "next.js": "logos:nextjs-icon",
-  nextjs: "logos:nextjs-icon",
   typescript: "devicon:typescript",
-  "tailwind css": "logos:tailwindcss-icon",
-  framer: "logos:framer",
-  "framer motion": "logos:framer",
-  zustand: "devicon:redux", // Using Redux icon as state management fallback
-  redux: "devicon:redux",
-  expo: "logos:expo-icon",
-  "react native": "logos:react",
-  "react native (expo)": "logos:expo-icon",
-  swift: "logos:swift",
-  swiftui: "logos:swift",
-  "performance/seo": "logos:google-icon", // SEO/performance with Google
+  graphql: "logos:graphql",
+
 
   // Backend & DevOps
   "node.js": "logos:nodejs-icon",
   node: "logos:nodejs-icon",
   express: "devicon:express",
-  vercel: "logos:vercel-icon",
   java: "devicon:java",
-  firebase: "logos:firebase",
   docker: "logos:docker-icon",
   "github actions": "devicon:githubactions",
   rest: "devicon:swagger", // REST API with Swagger
-  "next.js api routes": "logos:nextjs-icon", // Use Next.js icon for API routes
-  "auth (nextauth)": "logos:auth0-icon", // Auth0 for authentication
-  "edge functions": "logos:vercel-icon", // Vercel for edge functions
 
   // Tooling & Testing
   jest: "logos:jest",
@@ -51,6 +36,7 @@ const ALIASES: Record<string, string> = {
 
   // Other
   openai: "logos:openai-icon",
+  go: "devicon:go",
   "llms / neural nets": "logos:openai-icon",
   "c/c++ (embedded)": "devicon:cplusplus",
   python: "logos:python",

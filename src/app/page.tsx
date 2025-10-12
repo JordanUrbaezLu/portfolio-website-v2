@@ -48,9 +48,9 @@ const Contact = dynamic(
 const portfolioSections = [
   { id: "home", label: "Home" },
   { id: "about", label: "About" },
+  { id: "experience", label: "Experience" },
   { id: "projects", label: "Projects" },
   { id: "skills", label: "Skills" },
-  { id: "experience", label: "Experience" },
   { id: "contact", label: "Contact" },
 ];
 
@@ -68,9 +68,9 @@ export default function HomePage() {
 
       {/* All other sections lazy load */}
       <About registry={registry} />
+      <Experience registry={registry} />
       <Projects registry={registry} />
       <Skills registry={registry} />
-      <Experience registry={registry} />
       <Contact registry={registry} />
     </div>
   );

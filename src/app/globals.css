@@ -24,26 +24,36 @@
 /* Page background — on <html> */
 html {
   scroll-behavior: smooth;
-  background: radial-gradient(
-      1200px 600px at 10% -10%,
-      rgba(99, 102, 241, 0.12),
+  background:
+    radial-gradient(
+      1000px 700px at 20% -10%,
+      rgba(13, 148, 136, 0.25),  /* strong teal-700 core */
+      rgba(19, 78, 74, 0.1),
       transparent
     ),
     radial-gradient(
-      900px 500px at 110% 10%,
-      rgba(56, 189, 248, 0.12),
+      900px 600px at 120% 20%,
+      rgba(6, 182, 212, 0.25),  /* vivid cyan-teal glow */
+      rgba(13, 148, 136, 0.1),
       transparent
     ),
     radial-gradient(
-      800px 600px at 50% 120%,
-      rgba(16, 185, 129, 0.1),
+      1000px 700px at 50% 130%,
+      rgba(4, 47, 46, 0.25),    /* dark turquoise shadow */
       transparent
     ),
-    rgb(var(--color-base-50));
-  /* Custom scrollbar on html for all devices */
+    linear-gradient(
+      180deg,
+      rgb(2, 44, 44) 0%,
+      rgb(4, 78, 74) 40%,
+      rgb(6, 95, 91) 100%
+    );
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
 }
+
+
+
 html::-webkit-scrollbar {
   width: 8px;
 }

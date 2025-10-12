@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Jason Moynihan — Portfolio",
+  title: "Jordan Urbaez-Lu — Portfolio",
   description: "Clean, modern portfolio with glass UI",
 };
 

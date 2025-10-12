@@ -21,9 +21,9 @@ interface FormErrors {
 
 export function Contact({
   registry,
-  linkedin = "https://linkedin.com/in/yourprofile",
-  github = "https://github.com/yourusername",
-  footnote = "© 2025 Jason Moynihan. All rights reserved.",
+  //linkedin = "https://linkedin.com/in/yourprofile",
+  //github = "https://github.com/yourusername",
+  footnote = "© 2025 Jordan Urbaez-Lu All rights reserved.",
 }: {
   registry: React.RefObject<Record<string, HTMLElement | null>>;
   linkedin?: string;
@@ -136,16 +136,16 @@ export function Contact({
         <MotionReveal direction="up">
           <div className="max-w-4xl mx-auto">
             {/* Contact Info Card */}
-            <Card padding="p-4" className="mb-12 max-w-md mx-auto mt-6">
-              <div className="flex items-center justify-center gap-8">
+            <Card padding="p-4" className="mb-12 max-w-lg mx-auto mt-6">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-center">
                 {/* Email */}
                 <a
-                  href="mailto:jrmoynihan99@gmail.com"
-                  className="flex items-center gap-3 text-white/80 hover:text-white transition-colors group"
+                  href="mailto:jordana.urbaez@gmail.com"
+                  className="w-fit mx-auto flex items-center gap-3 text-white/80 hover:text-white transition-colors group"
                 >
-                  <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-white/20 transition-colors">
                     <svg
-                      className="w-5 h-5"
+                      className="w-4 h-4 sm:w-5 sm:h-5"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -159,18 +159,18 @@ export function Contact({
                     </svg>
                   </div>
                   <span className="text-sm font-medium">
-                    jrmoynihan99@gmail.com
+                    jordana.urbaez@gmail.com
                   </span>
                 </a>
 
                 {/* Phone */}
                 <a
-                  href="tel:9785909137"
-                  className="flex items-center gap-3 text-white/80 hover:text-white transition-colors group"
+                  href="tel:9782897135"
+                  className="w-fit mx-auto flex items-center gap-3 text-white/80 hover:text-white transition-colors group"
                 >
-                  <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-white/20 transition-colors">
                     <svg
-                      className="w-5 h-5"
+                      className="w-4 h-4 sm:w-5 sm:h-5"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -183,7 +183,7 @@ export function Contact({
                       />
                     </svg>
                   </div>
-                  <span className="text-sm font-medium">(978) 590-9137</span>
+                  <span className="text-sm font-medium">(978) 289-7135</span>
                 </a>
               </div>
             </Card>

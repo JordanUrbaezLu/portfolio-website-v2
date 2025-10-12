@@ -36,7 +36,7 @@ export function Experience({
             activateUnderline={underlineActive}
             underlineDelay={80}
           >
-            Experience
+            Professional Experience
           </SectionHeader>
         </MotionReveal>
 

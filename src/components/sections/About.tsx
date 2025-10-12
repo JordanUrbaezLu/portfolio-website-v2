@@ -122,7 +122,7 @@ export function About({
                         <div key={i}>
                           <p className="text-white font-light">{ed.degree}</p>
                           <p className="text-white/60 font-light">
-                            {ed.school} · {ed.year}
+                            {ed.school}
                           </p>
                         </div>
                       ))}
