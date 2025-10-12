@@ -1,0 +1,155 @@
+/* app/globals.css (Tailwind v4 style) */
+@import "tailwindcss";
+/* —— Your design tokens (Tailwind v4) —— */
+@theme {
+  --color-base-50: 248 250 252; /* slate-50 */
+  --color-base-100: 241 245 249; /* slate-100 */
+  --color-base-900: 15 23 42; /* slate-900 */
+  --color-accent-400: 99 102 241; /* indigo-500 */
+  --color-accent-500: 79 70 229; /* indigo-600 */
+  --color-accent-600: 67 56 202; /* indigo-700 */
+  --color-glass-fill: 255 255 255;
+  --color-glass-border: 255 255 255;
+}
+/* Dark-mode overrides */
+@media (prefers-color-scheme: dark) {
+  @theme {
+    --color-base-50: 2 6 23; /* slate-950 */
+    --color-base-100: 15 23 42; /* slate-900 */
+    --color-base-900: 226 232 240; /* slate-200 (text) */
+    --color-glass-fill: 15 23 42;
+    --color-glass-border: 255 255 255;
+  }
+}
+/* Page background — on <html> */
+html {
+  scroll-behavior: smooth;
+  background: radial-gradient(
+      1200px 600px at 10% -10%,
+      rgba(99, 102, 241, 0.12),
+      transparent
+    ),
+    radial-gradient(
+      900px 500px at 110% 10%,
+      rgba(56, 189, 248, 0.12),
+      transparent
+    ),
+    radial-gradient(
+      800px 600px at 50% 120%,
+      rgba(16, 185, 129, 0.1),
+      transparent
+    ),
+    rgb(var(--color-base-50));
+  /* Custom scrollbar on html for all devices */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+}
+html::-webkit-scrollbar {
+  width: 8px;
+}
+html::-webkit-scrollbar-track {
+  background: transparent;
+}
+html::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 4px;
+}
+html::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.6);
+}
+body {
+  color: rgb(var(--color-base-900));
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+/* Only on desktop: make body scroll instead */
+@media (min-width: 768px) {
+  html {
+    height: 100vh;
+    overflow: hidden;
+  }
+  body {
+    height: 100%;
+    overflow-y: auto;
+    scroll-behavior: smooth; /* ADD THIS LINE */
+  }
+  /* Move scrollbar styles to body on desktop */
+  body {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+  }
+  body::-webkit-scrollbar {
+    width: 8px;
+  }
+  body::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  body::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+  }
+  body::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.6);
+  }
+}
+/* ... rest of your CSS ... */
+
+/* Utilities */
+.glass {
+  background-color: rgb(var(--color-glass-fill) / 0.6);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgb(var(--color-glass-border) / 0.2);
+  border-radius: 1rem; /* rounded-2xl */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.hover-lift {
+  transition: transform 300ms;
+  will-change: transform;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+.section-pad {
+  padding-block: 6rem;
+}
+
+@media (min-width: 768px) {
+  .section-pad {
+    padding-block: 8rem;
+  }
+}
+
+/* Custom scrollbar utility class for other scrollable containers */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* Selection color */
+::selection {
+  background-color: rgb(var(--color-accent-500) / 0.2);
+  color: rgb(var(--color-accent-600));
+}
