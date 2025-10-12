@@ -28,128 +28,93 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    title: "Anchor",
-    slug: "anchor",
-    summary:
-      "Nonprofit iOS accountability app built with React Native and Firebase — helping young men fight pornography addiction through anonymous support, AI-generated daily content, and AI moderation.",
-    tech: [
-      "React",
-      "Typescript",
-      "Expo",
-      "Firebase",
-      "Cloud Functions",
-      "AI Integration",
-    ],
+    title: "Next Pokédex",
+    slug: "next-pokédex",
+    summary: "Pokedex powered by Next.js, React, GraphQL, and Java.",
+    tech: ["Next.js", "React", "Typescript", "Java", "GraphQL"],
     media: [
       {
         type: "image",
-        src: "/assets/case-studies/anchor/anchor-sos.jpg",
-        alt: "Anchor app home screen",
-      },
-      {
-        type: "image",
-        src: "/assets/case-studies/anchor/anchor-home.jpg",
-        alt: "Anchor app goal setting",
-      },
-      {
-        type: "image",
-        src: "/assets/case-studies/anchor/anchor-messages.jpg",
-        alt: "Anchor app notifications",
-      },
-      {
-        type: "video",
-        src: "/media/anchor-demo.mp4",
-        poster: "/media/anchor-poster.jpg",
-        alt: "Anchor app demo video",
-      },
-    ],
-    links: [
-      { type: "case", label: "Case Study", href: "/case-studies/anchor" },
-      {
-        type: "appstore",
-        label: "App Store",
-        href: "https://apps.apple.com/us/app/anchor-quit-porn-together/id6752869901",
-      },
-      {
-        type: "github",
-        label: "GitHub",
-        href: "https://github.com/jrmoynihan99/anchor-accountability",
-      },
-    ],
-    featured: true,
-  },
-  {
-    title: "Dialed - AI Meal Planner",
-    slug: "dialed",
-    summary:
-      "AI meal planner that uses your targets and preferences to create custom meals with images and recipes, and builds portion-accurate weekly plans with swaps and grocery lists.",
-    tech: ["React", "Next.js", "TypeScript", "Zustand", "GLPK.js", "OpenAI"],
-    mediaLayout: "hybrid", // Specify hybrid layout
-    media: [
-      // Desktop screenshots (landscape)
-      {
-        type: "image",
-        src: "/assets/case-studies/dialed/dialed-meals.jpg",
-        alt: "Dialed desktop dashboard",
-      },
-      {
-        type: "image",
-        src: "/assets/case-studies/dialed/dialed-planner-mobile.jpg",
-        alt: "Dialed mobile view",
-      },
-    ],
-    links: [
-      { type: "case", label: "Case Study", href: "/case-studies/dialed" },
-      {
-        type: "live",
-        label: "Demo",
-        href: "https://meal-planner-ai-app.vercel.app/",
-      },
-    ],
-    featured: true,
-  },
-  {
-    title: "LiqGlass Component Library",
-    slug: "liqglass",
-    summary:
-      "Modern React/Tailwind component library inspired by IOS 26's Liquid Glass",
-    tech: ["React", "Tailwind", "Vercel"],
-    media: [
-      {
-        type: "image",
-        src: "/assets/LiqGlass.webp",
-        alt: "Realtime collaboration interface",
+        src: "/assets/nextPokedex.png",
+        alt: "Next Pokedex",
       },
     ],
     links: [
       {
         type: "live",
         label: "Demo",
-        href: "https://liq-glass-component-library.vercel.app/",
+        href: "https://next-pokedex-git-favorite-jordanurbaezlus-projects.vercel.app/generation/1",
       },
-      {
-        type: "github",
-        href: "https://github.com/jrmoynihan99/LiqGlass-Component-Library",
-      },
-    ],
-  },
-  {
-    title: "AI Smart Light Intersection",
-    slug: "ai-light-intersection",
-    summary:
-      "Artificial Intelligence project where a light intersection learns through reinforcement learning. ",
-    tech: ["C++"],
-    media: [
-      {
-        type: "image",
-        src: "/assets/case-studies/intersection/intersection.jpg",
-        alt: "Data visualization dashboard",
-      },
-    ],
-    links: [
       {
         type: "github",
         href: "https://github.com/jrmoynihan99/Smart-Light-Intersection",
+      },
+    ],
+  },
+  {
+    title: "Airbnb Clone",
+    slug: "airbnb clone",
+    summary: "Airbnb clone integrated with membership features",
+    tech: ["Next.js", "React", "Typescript", "TailwindCSS"],
+    media: [
+      {
+        type: "image",
+        src: "/assets/airbnbClone.png",
+        alt: "Airbnb",
+      },
+    ],
+    links: [
+      {
+        type: "live",
+        label: "Demo",
+        href: "https://next-js-airbnb-app-teal.vercel.app/",
+      },
+      {
+        type: "github",
+        href: "https://github.com/JordanUrbaezLu/NextJS-Airbnb-App",
+      },
+    ],
+  },
+  {
+    title: "Void UI React Component Library",
+    slug: "void-ui",
+    summary: "Modern React component library with a Void theme.",
+    tech: ["React", "Typescript", "SCSS", "Storybook", "Chromatic"],
+    media: [
+      {
+        type: "image",
+        src: "/assets/voidui.png",
+        alt: "Void UI",
+      },
+    ],
+    links: [
+      {
+        type: "live",
+        label: "Demo",
+        href: "https://jordanurbaezlu.github.io/void-ui-library/?path=/story/components-inputs-datepicker--selected",
+      },
+      {
+        type: "github",
+        href: "https://github.com/JordanUrbaezLu/void-ui-library",
+      },
+    ],
+  },
+  {
+    title: "Spaceship PVP",
+    slug: "spaceship-pvp",
+    summary: "Spaceship PVP game created with Python.",
+    tech: ["Python", "Game Assets", "PVP"],
+    media: [
+      {
+        type: "image",
+        src: "/assets/spaceshipPVP.png",
+        alt: "Spaceship PVP",
+      },
+    ],
+    links: [
+      {
+        type: "github",
+        href: "https://github.com/JordanUrbaezLu/SpaceshipPVP",
       },
     ],
   },

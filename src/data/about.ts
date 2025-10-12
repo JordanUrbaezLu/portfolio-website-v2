@@ -12,12 +12,11 @@ export interface AboutData {
 
 export const about: AboutData = {
   paragraphs: [
-    "I’m a front-end engineer who thrives on building things from the ground up. After starting my software journey in embedded medical devices, I took a leap into entrepreneurship — launching a clothing brand that hit six figures on day one and building Anchor, a nonprofit React app that helps young men quit pornography. Both ventures demanded full ownership, creativity, and execution, and both taught me how much I value the impact of design and UX.",
-    "Now, as a React/Next engineer, I channel that same entrepreneurial grit and design obsession into software — building AI powered interfaces that are fast, intuitive, and crafted with the same attention to detail I once poured into products and brands.",
+    "Full‑stack engineer with 7+ years of experience architecting and scaling high‑performance web applications, with deep expertise in React and Next.js. Currently leading large‑scale optimizations and feature development for Walmart.com, improving Core Web Vitals by 75%+, accelerating user growth, and reducing membership churn. Skilled in TypeScript, GraphQL, and modern frontend architecture patterns including SSR, RSC, and client–server data orchestration. Looking to contribute on a collaborative team where I can deliver measurable product impact, continue growing technically, and help the organization ship reliable, user‑first software.",
   ],
   availabilityLabel: "Open to opportunities",
-  role: "AI Frontend / Full-Stack Engineer",
-  focus: "React • Next.js • TypeScript • AI",
+  role: "Senior Software Engineer",
+  focus: "React • Next.js • TypeScript • GraphQL • Node.js • Java",
   ctas: [
     { href: "#projects", label: "View Projects" },
     { href: "#experience", label: "Experience" },
@@ -28,13 +27,11 @@ export const about: AboutData = {
 export interface EducationItem {
   degree: string;
   school: string;
-  year: string;
 }
 
 export const education: EducationItem[] = [
   {
-    degree: "B.S. Computer Science",
+    degree: "Computer Science",
     school: "University of Massachusetts Lowell",
-    year: "2019",
   },
 ];

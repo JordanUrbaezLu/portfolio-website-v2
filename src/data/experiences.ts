@@ -8,46 +8,35 @@ export interface ExperienceItem {
 
 export const experiences: ExperienceItem[] = [
   {
-    title: "Founder & Lead Developer",
-    company: "Anchor – Nonprofit Mobile App",
-    period: "2025 – Present",
+    title: "Senior Lead Software Engineer",
+    company: "Walmart Global Tech",
+    period: "2022 – Present",
     description:
-      "Built and launched a nonprofit accountability app addressing pornography addiction. Available free on the App Store, featuring daily AI-generated content, AI moderation, streak tracking, and anonymous community support.",
-    highlights: [
-      "React Native + Expo",
-      "Firebase (Auth, Firestore, Cloud Functions)",
-      "Push Notifications",
-      "AI Content Generation",
-      "End-to-End Product Design & Launch",
-    ],
+      "Improved Walmart+ churn and renewal flows serving millions of members worldwide; a 2% churn reduction and 3% renewal uplift translated to significant recurring revenue gains through targeted A/B testing and UX/payment optimizations.",
+    highlights: ["Next.js", "React", "GraphQL", "Node.js", "Java"],
   },
   {
-    title: "Founder & Co-owner",
-    company: "RAYN – Clothing Brand",
-    period: "2023 – 2025",
+    title: "Senior Full Stack Software Engineer",
+    company: "Meltwater",
+    period: "2020 – 2022",
     description:
-      "Founded and scaled a direct-to-consumer clothing brand, generating $120K in sales on launch day and over $500K in the first year. Oversaw product design, supply chain, e-commerce development, and digital marketing.",
-    highlights: [
-      "E-commerce Development",
-      "Brand Strategy",
-      "Digital Marketing",
-      "Product Design",
-      "International Logistics",
-    ],
+      "Improved Core Web Vitals and frontend maintainability across the Analytics web app by migrating legacy Redux logic to modern React Context, resulting in smoother UX and reduced complexity for thousands of enterprise users.",
+    highlights: ["React", "Redux", "Core Web Vitals", "Design System", "SCSS"],
   },
   {
-    title: "Software Engineer",
-    company: "ZOLL Medical",
-    period: "2019 – 2023",
+    title: "React Developer",
+    company: "BeyondTrust",
+    period: "2019 – 2020",
     description:
-      "Engineered embedded C++/Python software for FDA-cleared medical devices. Contributed to invasive blood pressure (IBP) signal processing and waveform display, implemented core API layers across the codebase, and led design of Bluetooth connectivity features.",
-    highlights: [
-      "Embedded C++ Development",
-      "Python",
-      "Signal Processing & Visualization",
-      "API Architecture",
-      "Bluetooth Feature Design",
-      "FDA-Regulated Development",
-    ],
+      "Developed React‑based UI for secure credential injection and remote access workflows in close collaboration with backend services.",
+    highlights: ["React", "Typescript", "HTTPS/TLS", "Authorization", "REST"],
+  },
+  {
+    title: "Web Developer",
+    company: "Drift",
+    period: "2018 – 2019",
+    description:
+      "Maintained and led production deployment cycle for the main marketing site in a fast‑paced release environment.",
+    highlights: ["Javascript", "HTML", "CSS", "CI/CD", "Dasboard Monitoring"],
   },
 ];

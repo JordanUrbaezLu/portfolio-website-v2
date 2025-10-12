@@ -18,36 +18,20 @@ export const skillGroups: SkillGroup[] = [
       { name: "React", level: "Expert", icon: "react" },
       { name: "Next.js", level: "Expert", icon: "next.js" },
       { name: "TypeScript", level: "Expert", icon: "typescript" },
-      { name: "Tailwind CSS", level: "Expert", icon: "tailwind css" },
-      { name: "Framer Motion", level: "Proficient", icon: "framer motion" },
-      { name: "Zustand", level: "Proficient", icon: "zustand" },
-      { name: "Redux", level: "Proficient", icon: "redux" },
-      { name: "SEO", level: "Proficient" }, // conceptual -> fallback
-      {
-        name: "React Native",
-        level: "Expert",
-        icon: "react",
-      },
-      { name: "SwiftUI", level: "Proficient", icon: "swiftui" },
+      { name: "Core Web Vitals", level: "Proficient" }, // conceptual -> fallback
+      { name: "GraphQL", level: "Expert", icon: "graphql" },
     ],
   },
   {
     title: "Backend & DevOps",
     items: [
+      { name: "Java", level: "Familiar", icon: "java" },
       { name: "Node.js", level: "Proficient", icon: "node.js" },
       { name: "Express", level: "Proficient", icon: "express" },
-      { name: "Vercel", level: "Proficient", icon: "vercel" },
+      { name: "Go", level: "Proficient", icon: "go" },
       { name: "Rest", level: "Familiar" }, // conceptual -> fallback
-      { name: "Java", level: "Familiar", icon: "java" },
-      { name: "Firebase", level: "Expert", icon: "firebase" },
-      {
-        name: "Next.js API Routes",
-        level: "Proficient",
-        icon: "next.js api routes",
-      },
-      { name: "Auth (NextAuth)", level: "Proficient", icon: "auth (nextauth)" },
       { name: "Docker", level: "Familiar", icon: "docker" },
-      { name: "Edge Functions", level: "Proficient" }, // conceptual -> fallback
+      { name: "Github Actions", level: "Expert", icon: "github actions" },
     ],
   },
   {
@@ -55,8 +39,6 @@ export const skillGroups: SkillGroup[] = [
     items: [
       { name: "Jest", level: "Proficient", icon: "jest" },
       { name: "Jenkins", level: "Familiar", icon: "jenkins" },
-      { name: "Webpack", level: "Proficient", icon: "webpack" },
-      { name: "Github Actions", level: "Expert", icon: "github actions" },
       {
         name: "React Testing Lib",
         level: "Familiar",
@@ -68,7 +50,7 @@ export const skillGroups: SkillGroup[] = [
     title: "Other",
     items: [
       {
-        name: "LLMs / Neural Nets",
+        name: "LLMs",
         level: "Proficient",
         icon: "llms / neural nets",
       },
@@ -76,10 +58,6 @@ export const skillGroups: SkillGroup[] = [
       { name: "Python", level: "Expert", icon: "python" },
       { name: "Agile/Scrum", level: "Proficient" }, // conceptual -> fallback
       { name: "CI/CD", level: "Expert" }, // conceptual -> fallback
-      { name: "Shopify", level: "Expert", icon: "shopify" },
-      { name: "Stripe", level: "Expert", icon: "stripe" },
-      { name: "Product & Brand", level: "Expert" }, // conceptual -> fallback
-      { name: "Prompt Engineering", level: "Proficient" }, // conceptual -> fallback
     ],
   },
 ];
