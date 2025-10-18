@@ -43,11 +43,11 @@ export const projects: Project[] = [
       {
         type: "live",
         label: "Demo",
-        href: "https://next-pokedex-git-favorite-jordanurbaezlus-projects.vercel.app/generation/1",
+        href: "https://next-pokedex-neon.vercel.app/generation/1",
       },
       {
         type: "github",
-        href: "https://github.com/jrmoynihan99/Smart-Light-Intersection",
+        href: "https://github.com/JordanUrbaezLu/next-pokedex",
       },
     ],
   },
@@ -55,7 +55,7 @@ export const projects: Project[] = [
     title: "Airbnb Clone",
     slug: "airbnb clone",
     summary: "Airbnb clone integrated with membership features",
-    tech: ["Next.js", "React", "Typescript", "TailwindCSS"],
+    tech: ["Next.js", "React", "Typescript", "TailwindCSS", "Node.js"],
     media: [
       {
         type: "image",
