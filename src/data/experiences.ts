@@ -12,7 +12,7 @@ export const experiences: ExperienceItem[] = [
     company: "Walmart Global Tech",
     period: "2022 – Present",
     description:
-      "Improved Walmart+ churn and renewal flows serving millions of members worldwide; a 2% churn reduction and 3% renewal uplift translated to significant recurring revenue gains through targeted A/B testing and UX/payment optimizations.",
+      "Web Platform Lead for Walmart+ Account Management — improving web page performance, reducing membership churn, and optimizing W+ payments UX for millions of users with React and Next.js.",
     highlights: ["Next.js", "React", "GraphQL", "Node.js", "Java"],
   },
   {
