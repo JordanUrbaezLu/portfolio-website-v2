@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "status": "node scripts/status.mjs"
   },
   "dependencies": {
     "@iconify-json/devicon": "^1.2.44",
@@ -30,6 +31,7 @@
     "@types/react-syntax-highlighter": "^15.5.13",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
+    "playwright-core": "^1.61.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

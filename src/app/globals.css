@@ -1,78 +1,84 @@
-/* app/globals.css (Tailwind v4 style) */
+/* app/globals.css — "Aurora Glass" design system (Tailwind v4) */
 @import "tailwindcss";
-/* —— Your design tokens (Tailwind v4) —— */
+
+/* ───────────────────────────── Design tokens ───────────────────────────── */
 @theme {
-  --color-base-50: 248 250 252; /* slate-50 */
-  --color-base-100: 241 245 249; /* slate-100 */
-  --color-base-900: 15 23 42; /* slate-900 */
-  --color-accent-400: 99 102 241; /* indigo-500 */
-  --color-accent-500: 79 70 229; /* indigo-600 */
-  --color-accent-600: 67 56 202; /* indigo-700 */
-  --color-glass-fill: 255 255 255;
-  --color-glass-border: 255 255 255;
+  /* Fonts (wired in layout.tsx via next/font) */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-display: var(--font-sora), var(--font-inter), ui-sans-serif, system-ui,
+    sans-serif;
+
+  /* Canvas + ink */
+  --color-canvas: #060812;
+  --color-canvas-2: #0a0e1c;
+  --color-ink: #e8ecf6;
+
+  /* Aurora accents */
+  --color-accent: #818cf8; /* indigo-400  */
+  --color-accent-strong: #6366f1; /* indigo-500  */
+  --color-teal: #2dd4bf; /* teal-400    */
+  --color-cyan: #22d3ee; /* cyan-400    */
+  --color-violet: #a78bfa; /* violet-400  */
+
+  /* Back-compat aliases (older components referenced these) */
+  --color-accent-400: #818cf8;
+  --color-accent-500: #6366f1;
+  --color-accent-600: #4f46e5;
+
+  /* Radius + shadow */
+  --radius-xl2: 1.25rem;
+  --shadow-glass: 0 1px 0 0 rgba(255, 255, 255, 0.06) inset,
+    0 12px 40px -12px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 0 1px rgba(129, 140, 248, 0.18),
+    0 18px 60px -20px rgba(99, 102, 241, 0.5);
+
+  /* Easing */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
-/* Dark-mode overrides */
-@media (prefers-color-scheme: dark) {
-  @theme {
-    --color-base-50: 2 6 23; /* slate-950 */
-    --color-base-100: 15 23 42; /* slate-900 */
-    --color-base-900: 226 232 240; /* slate-200 (text) */
-    --color-glass-fill: 15 23 42;
-    --color-glass-border: 255 255 255;
-  }
-}
-/* Page background — on <html> */
+
+/* ───────────────────────────── Base ───────────────────────────── */
 html {
   scroll-behavior: smooth;
-  background:
-    radial-gradient(
-      1000px 700px at 20% -10%,
-      rgba(13, 148, 136, 0.25),  /* strong teal-700 core */
-      rgba(19, 78, 74, 0.1),
-      transparent
-    ),
-    radial-gradient(
-      900px 600px at 120% 20%,
-      rgba(6, 182, 212, 0.25),  /* vivid cyan-teal glow */
-      rgba(13, 148, 136, 0.1),
-      transparent
-    ),
-    radial-gradient(
-      1000px 700px at 50% 130%,
-      rgba(4, 47, 46, 0.25),    /* dark turquoise shadow */
-      transparent
-    ),
-    linear-gradient(
-      180deg,
-      rgb(2, 44, 44) 0%,
-      rgb(4, 78, 74) 40%,
-      rgb(6, 95, 91) 100%
-    );
+  color-scheme: dark;
+  /* Prevent reveal/parallax x-transforms from creating horizontal scroll */
+  overflow-x: hidden;
+  /* No-flash aurora base — visible even before JS hydration */
+  background-color: var(--color-canvas);
+  background-image:
+    radial-gradient(1100px 760px at 12% -8%, rgba(99, 102, 241, 0.22), transparent 60%),
+    radial-gradient(1000px 700px at 110% 8%, rgba(34, 211, 238, 0.16), transparent 60%),
+    radial-gradient(1100px 800px at 50% 120%, rgba(167, 139, 250, 0.16), transparent 60%),
+    linear-gradient(180deg, #060812 0%, #070a16 45%, #05070f 100%);
+  background-attachment: fixed;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.28) transparent;
 }
 
-
-
 html::-webkit-scrollbar {
-  width: 8px;
+  width: 9px;
 }
 html::-webkit-scrollbar-track {
   background: transparent;
 }
 html::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.4);
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 9999px;
 }
 html::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.4);
 }
+
 body {
-  color: rgb(var(--color-base-900));
+  font-family: var(--font-sans);
+  color: var(--color-ink);
   overflow-x: hidden;
   max-width: 100vw;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
-/* Only on desktop: make body scroll instead */
+
+/* Desktop: body becomes the scroll container so the fixed aurora never scrolls */
 @media (min-width: 768px) {
   html {
     height: 100vh;
@@ -81,85 +87,211 @@ body {
   body {
     height: 100%;
     overflow-y: auto;
-    scroll-behavior: smooth; /* ADD THIS LINE */
-  }
-  /* Move scrollbar styles to body on desktop */
-  body {
+    scroll-behavior: smooth;
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+    scrollbar-color: rgba(255, 255, 255, 0.28) transparent;
   }
   body::-webkit-scrollbar {
-    width: 8px;
+    width: 9px;
   }
   body::-webkit-scrollbar-track {
     background: transparent;
   }
   body::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.4);
-    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: 9999px;
   }
   body::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.4);
   }
 }
-/* ... rest of your CSS ... */
 
-/* Utilities */
-.glass {
-  background-color: rgb(var(--color-glass-fill) / 0.6);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgb(var(--color-glass-border) / 0.2);
-  border-radius: 1rem; /* rounded-2xl */
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 8px 30px rgba(0, 0, 0, 0.12);
+::selection {
+  background-color: rgba(129, 140, 248, 0.32);
+  color: #fff;
 }
 
+/* Visible, on-brand keyboard focus */
+:focus-visible {
+  outline: 2px solid rgba(129, 140, 248, 0.7);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Headings default to the display face */
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+/* ───────────────────────────── Aurora blobs ───────────────────────────── */
+.aurora-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: 0.55;
+  will-change: transform;
+  pointer-events: none;
+}
+@media (min-width: 768px) {
+  .aurora-blob {
+    filter: blur(120px);
+  }
+}
+
+@keyframes aurora-drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(6%, 4%, 0) scale(1.12); }
+}
+@keyframes aurora-drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.05); }
+  50% { transform: translate3d(-5%, 6%, 0) scale(0.95); }
+}
+@keyframes aurora-drift-c {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(4%, -5%, 0) scale(1.1); }
+}
+.animate-aurora-a { animation: aurora-drift-a 18s var(--ease-out-expo) infinite; }
+.animate-aurora-b { animation: aurora-drift-b 22s var(--ease-out-expo) infinite; }
+.animate-aurora-c { animation: aurora-drift-c 26s var(--ease-out-expo) infinite; }
+
+/* Fine film grain overlay */
+.grain-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.035;
+}
+
+/* ───────────────────────────── Glass surfaces ───────────────────────────── */
+/* Border-radius intentionally omitted — callers set their own rounded-* */
+.glass {
+  background-color: rgba(255, 255, 255, 0.045);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-glass);
+}
+.glass-strong {
+  background-color: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: var(--shadow-glass);
+}
+
+/* Gradient hairline border (for featured surfaces) */
+.ring-aurora {
+  position: relative;
+}
+.ring-aurora::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(129, 140, 248, 0.55),
+    rgba(45, 212, 191, 0.35) 45%,
+    rgba(167, 139, 250, 0.5)
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ───────────────────────────── Text + glow ───────────────────────────── */
+.text-aurora {
+  background: linear-gradient(100deg, #c7d2fe 0%, #99f6e4 45%, #ddd6fe 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ───────────────────────────── Motion utilities ───────────────────────────── */
 .hover-lift {
-  transition: transform 300ms;
+  transition: transform 0.35s var(--ease-out-expo),
+    box-shadow 0.35s var(--ease-out-expo);
   will-change: transform;
 }
-
 .hover-lift:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
 }
 
-.section-pad {
-  padding-block: 6rem;
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.animate-float { animation: float 6s ease-in-out infinite; }
+
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+.animate-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.animate-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+  animation: shimmer 1.6s infinite;
 }
 
-@media (min-width: 768px) {
-  .section-pad {
-    padding-block: 8rem;
-  }
-}
-
-/* Custom scrollbar utility class for other scrollable containers */
+/* ───────────────────────────── Layout helpers ───────────────────────────── */
+/* Thin scrollbars for inner scroll areas */
 .scrollbar-thin {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
-
 .scrollbar-thin::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
-
 .scrollbar-thin::-webkit-scrollbar-track {
   background: transparent;
 }
-
 .scrollbar-thin::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.3);
-  border-radius: 3px;
+  border-radius: 9999px;
 }
-
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.45);
 }
 
-/* Selection color */
-::selection {
-  background-color: rgb(var(--color-accent-500) / 0.2);
-  color: rgb(var(--color-accent-600));
+/* Hide scrollbar (mobile horizontal carousels) */
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ───────────────────────────── Reduced motion ───────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-aurora-a,
+  .animate-aurora-b,
+  .animate-aurora-c,
+  .animate-float,
+  .animate-ping,
+  .animate-shimmer::after {
+    animation: none !important;
+  }
+  .hover-lift {
+    transition: none;
+  }
 }
