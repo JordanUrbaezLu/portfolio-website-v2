@@ -17,8 +17,8 @@ export function Home({
 }) {
   return (
     <Section id="home" registry={registry} className="relative z-20 px-4">
-      {/* ── Identity block ── */}
-      <div className="flex flex-col items-center justify-center pt-24 pb-12 md:min-h-screen md:pt-0 md:pb-0">
+      {/* ── Identity block (top-padded to always clear the fixed nav) ── */}
+      <div className="flex flex-col items-center pt-24 pb-14 md:pt-32 md:pb-20">
           <div className="mx-auto max-w-3xl text-center">
             {/* Current-role chip */}
             <MotionReveal direction="up" delay={0}>
