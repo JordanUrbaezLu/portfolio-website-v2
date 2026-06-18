@@ -6,14 +6,17 @@ type Dir = "up" | "left" | "right";
 
 export function SectionHeader({
   children,
+  eyebrow,
   className = "",
   reveal = true,
   direction = "up",
   delay = 0,
-  activateUnderline = false, // <-- new prop
+  activateUnderline = false,
   underlineDelay = 0,
 }: {
   children: React.ReactNode;
+  /** small uppercase kicker above the title */
+  eyebrow?: string;
   className?: string;
   reveal?: boolean;
   direction?: Dir;
@@ -26,10 +29,7 @@ export function SectionHeader({
 
   useLayoutEffect(() => {
     const measureText = () => {
-      if (textRef.current) {
-        const width = textRef.current.offsetWidth;
-        setTextWidth(width);
-      }
+      if (textRef.current) setTextWidth(textRef.current.offsetWidth);
     };
     measureText();
     const resizeObserver = new ResizeObserver(measureText);
@@ -38,22 +38,32 @@ export function SectionHeader({
   }, [children]);
 
   const headerContent = (
-    <div className={`text-center mb-12 md:mb-20 ${className}`}>
+    <div className={`text-center mb-12 md:mb-16 ${className}`}>
+      {eyebrow && (
+        <div className="mb-4 flex justify-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-white/60">
+            <span className="h-1.5 w-1.5 rounded-full bg-gradient-to-r from-indigo-400 to-violet-400" />
+            {eyebrow}
+          </span>
+        </div>
+      )}
       <h2
         ref={textRef}
-        className="text-4xl md:text-5xl font-light text-white mb-4 inline-block"
+        className="text-4xl md:text-5xl font-semibold text-white inline-block tracking-tight"
       >
         {children}
       </h2>
-      <div className="relative mx-auto w-16 h-px" style={{ minWidth: "4rem" }}>
-        {/* Base underline - always visible */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-
-        {/* Animated underline */}
+      <div
+        className="relative mx-auto mt-5 h-px"
+        style={{ minWidth: "4rem", width: "4rem" }}
+      >
+        {/* Base hairline */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+        {/* Animated aurora underline */}
         <div
-          className="absolute top-0 left-1/2 h-px -translate-x-1/2 bg-gradient-to-r from-transparent via-white/80 to-transparent shadow-sm shadow-white/20 transition-all duration-700 ease-out"
+          className="absolute top-0 left-1/2 h-px -translate-x-1/2 bg-gradient-to-r from-transparent via-indigo-300 to-transparent shadow-[0_0_8px_rgba(129,140,248,0.6)] transition-all duration-700 ease-out"
           style={{
-            width: activateUnderline ? `${textWidth}px` : 0,
+            width: activateUnderline ? `${Math.max(textWidth, 64)}px` : 0,
             opacity: activateUnderline ? 1 : 0,
             transitionDelay: activateUnderline ? `${underlineDelay}ms` : "0ms",
           }}

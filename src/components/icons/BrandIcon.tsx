@@ -1,14 +1,10 @@
 "use client";
 import * as React from "react";
-import { Icon, addCollection, type IconifyJSON } from "@iconify/react";
-// Load entire sets once (typed as IconifyJSON)
-import logos from "@iconify-json/logos/icons.json";
-import devicon from "@iconify-json/devicon/icons.json";
-import skillIcons from "@iconify-json/skill-icons/icons.json";
+import { Icon } from "@iconify/react";
+import { registerIconCollections } from "@/components/icons/iconify-setup";
 
-addCollection(logos as IconifyJSON);
-addCollection(devicon as IconifyJSON);
-addCollection(skillIcons as IconifyJSON);
+// Register the bundled Iconify collections (logos / devicon / skill-icons) once.
+registerIconCollections();
 
 const ALIASES: Record<string, string> = {
   // Frontend

@@ -1,7 +1,20 @@
 import React from "react";
-export function Tag({ children }: { children: React.ReactNode }) {
+import clsx from "clsx";
+
+export function Tag({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <span className="px-3 py-1 bg-teal-400/10 border rounded-lg text-sm text-teal-300 font-medium">
+    <span
+      className={clsx(
+        "inline-flex items-center rounded-lg border border-white/10 bg-white/[0.04] px-2.5 py-1 text-xs font-medium text-white/75 transition-colors duration-200 hover:border-indigo-300/40 hover:text-white",
+        className
+      )}
+    >
       {children}
     </span>
   );

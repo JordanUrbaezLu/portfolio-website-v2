@@ -1,115 +1,113 @@
 "use client";
-import React, { useRef, useLayoutEffect, useState } from "react";
-import { MotionParallax } from "@/components/animations/MotionParallax";
+import React from "react";
+import { ArrowRight, Download, Mail } from "lucide-react";
 import { MotionReveal } from "@/components/animations/MotionReveal";
 import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 import { HeadshotProgress } from "@/components/ui/HeadshotProgress";
+import { SocialLinks } from "@/components/ui/SocialLinks";
+import { StatBand } from "@/components/ui/StatBand";
+import { LogoStrip } from "@/components/ui/LogoStrip";
+import { profile } from "@/data/profile";
 
 export function Home({
   registry,
-  name = "Hi, I'm Jordan Urbaez-Lu",
-  title = "Senior Software Engineer with 7+ years of experience architecting, developing, and scaling high‑performance web applications, with deep expertise in React and Next.js",
 }: {
   registry: React.RefObject<Record<string, HTMLElement | null>>;
-  name?: string;
-  title?: string;
 }) {
-  const nameRef = useRef<HTMLHeadingElement>(null);
-  const [nameWidth, setNameWidth] = useState(0);
-  const [underlineActive, setUnderlineActive] = useState(false);
-
-  useLayoutEffect(() => {
-    const measureText = () => {
-      if (nameRef.current) {
-        const width = nameRef.current.offsetWidth;
-        setNameWidth(width);
-      }
-    };
-    measureText();
-    const resizeObserver = new ResizeObserver(measureText);
-    if (nameRef.current) resizeObserver.observe(nameRef.current);
-    return () => resizeObserver.disconnect();
-  }, [name]);
-
   return (
-    <Section
-      id="home"
-      registry={registry}
-      className="relative min-h-screen flex items-center justify-center px-4 z-20"
-    >
-      <MotionParallax range={50}>
-        <div className="text-center max-w-4xl mx-auto">
-          {/* Headshot */}
-          <MotionReveal direction="up" delay={0}>
-            <div className="mb-8 flex items-center justify-center">
-              <HeadshotProgress size={160} gap={8} border={2} trigger={true} />
-            </div>
-          </MotionReveal>
+    <Section id="home" registry={registry} className="relative z-20 px-4">
+      {/* ── Identity block (top-padded to always clear the fixed nav) ── */}
+      <div className="flex flex-col items-center pt-24 pb-14 md:pt-32 md:pb-20">
+          <div className="mx-auto max-w-3xl text-center">
+            {/* Current-role chip */}
+            <MotionReveal direction="up" delay={0}>
+              <div className="mb-8 flex justify-center">
+                <span className="ring-aurora relative inline-flex items-center gap-2.5 rounded-full bg-white/[0.05] px-4 py-1.5 text-sm font-medium text-white/80 backdrop-blur-md">
+                  <span className="h-2 w-2 rounded-full bg-gradient-to-r from-indigo-400 to-violet-400 shadow-[0_0_10px_rgba(129,140,248,0.9)]" />
+                  {profile.role}
+                  <span className="h-3 w-px bg-white/20" />
+                  <span className="text-white/55">{profile.company}</span>
+                </span>
+              </div>
+            </MotionReveal>
 
-          {/* Name */}
-          <MotionReveal
-            direction="up"
-            delay={120}
-            onViewportEnter={() => {
-              // Trigger underline animation after name appears
-              setTimeout(() => setUnderlineActive(true), 300);
-            }}
-          >
-            <h1
-              ref={nameRef}
-              className="text-5xl md:text-7xl font-light text-white mb-6 tracking-tight inline-block"
-            >
-              {name}
-            </h1>
-          </MotionReveal>
+            {/* Headshot */}
+            <MotionReveal direction="up" delay={60}>
+              <div className="mb-8 flex items-center justify-center">
+                <div className="relative">
+                  <div className="absolute -inset-6 rounded-full bg-gradient-to-tr from-indigo-500/30 via-cyan-400/20 to-violet-500/30 blur-2xl" />
+                  <div className="relative">
+                    <HeadshotProgress size={148} gap={8} border={2} trigger />
+                  </div>
+                </div>
+              </div>
+            </MotionReveal>
 
-          {/* Animated Divider line */}
-          <MotionReveal direction="up" delay={200}>
-            <div
-              className="relative mx-auto w-24 h-px mb-8"
-              style={{ minWidth: "6rem" }}
-            >
-              {/* Base underline - always visible */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-              {/* Animated underline */}
-              <div
-                className="absolute top-0 left-1/2 h-px -translate-x-1/2 bg-gradient-to-r from-transparent via-white/80 to-transparent shadow-sm shadow-white/20 transition-all duration-700 ease-out"
-                style={{
-                  width: underlineActive ? `${nameWidth / 2}px` : 0,
-                  opacity: underlineActive ? 1 : 0,
-                  transitionDelay: underlineActive ? "100ms" : "0ms",
-                }}
-              />
-            </div>
-          </MotionReveal>
+            {/* Name */}
+            <MotionReveal direction="up" delay={120}>
+              <h1 className="font-display text-5xl font-semibold tracking-tight text-white md:text-7xl">
+                {profile.name}
+              </h1>
+            </MotionReveal>
 
-          {/* Title/description */}
-          <MotionReveal direction="up" delay={280}>
-            <p className="text-xl md:text-2xl text-white/70 font-light leading-relaxed max-w-2xl mx-auto">
-              {title}
-            </p>
-          </MotionReveal>
+            {/* Value prop */}
+            <MotionReveal direction="up" delay={200}>
+              <p className="mx-auto mt-6 max-w-2xl text-[1.6rem] font-light leading-tight tracking-tight text-white/85 md:text-[2rem]">
+                <span className="text-aurora font-normal">Fast, resilient web</span>{" "}
+                at scale — and the{" "}
+                <span className="text-aurora font-normal">agentic AI</span> to ship it.
+              </p>
+            </MotionReveal>
 
-          {/* Buttons */}
-          <MotionReveal direction="up" delay={400}>
-            <div className="flex gap-4 justify-center mt-8">
-              <Button href="#experience" variant="primary">
-                <span className="relative z-10">View Experience</span>
-              </Button>
-              <Button href="#contact" variant="outline">
-                Contact Me
-              </Button>
-            </div>
-          </MotionReveal>
-        </div>
-      </MotionParallax>
+            {/* Supporting line */}
+            <MotionReveal direction="up" delay={260}>
+              <p className="mx-auto mt-5 max-w-xl text-base font-light leading-relaxed text-white/55">
+                {profile.heroLine}
+              </p>
+            </MotionReveal>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 transform z-20">
-        <MotionReveal direction="up" delay={500}>
-          <div className="w-px h-16 bg-gradient-to-b from-white/30 to-transparent" />
-          <div className="mt-2 text-white/40 text-xs font-medium">SCROLL</div>
+            {/* CTAs */}
+            <MotionReveal direction="up" delay={340}>
+              <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+                <Button href="#contact" variant="primary" size="lg">
+                  <Mail size={18} />
+                  Get in touch
+                </Button>
+                <Button href="#experience" variant="glass" size="lg">
+                  View experience
+                  <ArrowRight size={18} />
+                </Button>
+                <Button
+                  as="a"
+                  href={profile.resumeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="outline"
+                  size="lg"
+                >
+                  <Download size={18} />
+                  Résumé
+                </Button>
+              </div>
+            </MotionReveal>
+
+            {/* Social row */}
+            <MotionReveal direction="up" delay={420}>
+              <div className="mt-8 flex justify-center">
+                <SocialLinks />
+              </div>
+            </MotionReveal>
+          </div>
+      </div>
+
+      {/* ── Proof band (clear separation from the identity block) ── */}
+      <div className="mx-auto max-w-5xl space-y-14 pb-10 pt-10 md:pt-4">
+        <MotionReveal direction="up">
+          <StatBand />
+        </MotionReveal>
+        <MotionReveal direction="up" delay={80}>
+          <LogoStrip />
         </MotionReveal>
       </div>
     </Section>

@@ -17,11 +17,10 @@ export function Section({
   const ref = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    registry.current[id] = ref.current;
-    console.log(`[Section] Registered: ${id}`, ref.current);
+    const reg = registry.current;
+    reg[id] = ref.current;
     return () => {
-      registry.current[id] = null;
-      console.log(`[Section] Unregistered: ${id}`);
+      reg[id] = null;
     };
   }, [id, registry]);
 

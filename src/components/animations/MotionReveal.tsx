@@ -8,12 +8,14 @@ export function MotionReveal({
   children,
   direction = "up",
   delay = 0,
+  className,
   onAnimationComplete,
   onViewportEnter,
 }: {
   children: React.ReactNode;
   direction?: Dir;
   delay?: number;
+  className?: string;
   onAnimationComplete?: () => void;
   onViewportEnter?: () => void; // <-- add this
 }) {
@@ -27,6 +29,7 @@ export function MotionReveal({
 
   return (
     <motion.div
+      className={className}
       initial={hidden}
       whileInView={{ opacity: 1, x: 0, y: 0 }}
       viewport={{ once: true, amount: 0.25 }}

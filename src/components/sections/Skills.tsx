@@ -4,13 +4,12 @@ import { Section } from "@/components/ui/Section";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { MotionParallax } from "@/components/animations/MotionParallax";
 import { MotionReveal } from "@/components/animations/MotionReveal";
-import { Card } from "@/components/ui/Card";
-import { skillGroups } from "@/data/skills";
+import { skillGroups, type SkillLevel } from "@/data/skills";
 import { BrandIcon } from "@/components/icons/BrandIcon";
 
-function getIconCategory(
-  groupTitle: string
-): "frontend" | "backend" | "tooling" | "testing" | "other" {
+type IconCategory = "frontend" | "backend" | "tooling" | "testing" | "other";
+
+function getIconCategory(groupTitle: string): IconCategory {
   const title = groupTitle.toLowerCase();
   if (title.includes("frontend")) return "frontend";
   if (title.includes("backend") || title.includes("devops")) return "backend";
@@ -18,74 +17,68 @@ function getIconCategory(
   return "other";
 }
 
-// Memoized skill card component to prevent unnecessary re-renders
-const SkillCard = React.memo(
+const LEVEL_DOTS: Record<SkillLevel, number> = {
+  Expert: 3,
+  Proficient: 2,
+  Familiar: 1,
+};
+
+/** Three-dot meter: filled dots aurora-tinted, empties faint. */
+function LevelMeter({ level }: { level: SkillLevel }) {
+  const filled = LEVEL_DOTS[level];
+  return (
+    <span
+      className="flex items-center gap-1"
+      role="img"
+      aria-label={`Proficiency: ${level}`}
+    >
+      {[0, 1, 2].map((i) => (
+        <span
+          key={i}
+          className={
+            i < filled
+              ? "h-1.5 w-1.5 rounded-full bg-gradient-to-r from-indigo-400 to-violet-400 shadow-[0_0_6px_rgba(129,140,248,0.55)]"
+              : "h-1.5 w-1.5 rounded-full bg-white/15"
+          }
+        />
+      ))}
+    </span>
+  );
+}
+
+const SkillChip = React.memo(
   ({
     skill,
-    groupTitle,
+    category,
   }: {
-    skill: { name: string; icon?: string };
-    groupTitle: string;
+    skill: { name: string; level: SkillLevel; icon?: string };
+    category: IconCategory;
   }) => (
-    <Card
-      padding="p-5"
-      className="relative group cursor-pointer transition-all hover:scale-105"
-    >
-      {/* Default (icon + name) */}
-      <div
-        className={`
-        flex items-center gap-2 transition-opacity duration-200
-        group-hover:opacity-0 group-focus-within:opacity-0
-      `}
-      >
-        <span className="shrink-0 grid place-items-center rounded-md bg-white/5 p-1">
+    <div className="group relative glass rounded-2xl px-3.5 py-3 transition-colors duration-300 hover:bg-white/[0.08]">
+      <div className="flex items-center gap-2.5">
+        <span className="shrink-0 grid h-8 w-8 place-items-center rounded-lg bg-white/[0.06] ring-1 ring-white/10">
           <BrandIcon
             name={skill.icon || skill.name}
+            category={category}
             className="h-5 w-5"
-            category={getIconCategory(groupTitle)}
           />
         </span>
-        <h4 className="font-medium text-white">{skill.name}</h4>
+        <div className="min-w-0 flex-1">
+          <h4 className="truncate text-sm font-medium text-white">
+            {skill.name}
+          </h4>
+          {/* Level label fades in on hover/focus; meter is the always-on signal */}
+          <span className="block text-[0.7rem] font-medium uppercase tracking-[0.12em] text-white/0 transition-colors duration-300 group-hover:text-white/45 group-focus-within:text-white/45">
+            {skill.level}
+          </span>
+        </div>
+        <LevelMeter level={skill.level} />
       </div>
-
-      {/* Morph-in overlay */}
-      <a
-        href={`/#projects`}
-        className={`
-        absolute inset-0 z-10 flex flex-col items-center justify-center
-        bg-white/10 rounded-3xl shadow-lg
-        opacity-0 pointer-events-none
-        group-hover:opacity-100 group-hover:pointer-events-auto
-        group-focus-within:opacity-100 group-focus-within:pointer-events-auto
-        transition-all duration-200
-        backdrop-blur-[2px]
-        outline-none ring-0 focus-visible:ring-2 focus-visible:ring-white/60
-        cursor-pointer
-      `}
-        tabIndex={0}
-      >
-        <span className="flex items-center gap-1 text-white font-medium text-base select-none">
-          View Projects
-          <svg
-            width="18"
-            height="18"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="inline-block ml-1"
-            aria-hidden="true"
-          >
-            <path d="M5 9h8m0 0-3.5-3.5M13 9l-3.5 3.5" />
-          </svg>
-        </span>
-      </a>
-    </Card>
+    </div>
   )
 );
 
-SkillCard.displayName = "SkillCard";
+SkillChip.displayName = "SkillChip";
 
 export function Skills({
   registry,
@@ -98,7 +91,7 @@ export function Skills({
     <Section
       id="skills"
       registry={registry}
-      className="relative py-16 md:py-24 px-4 z-20"
+      className="relative py-20 md:py-28 px-4 z-20"
     >
       <MotionParallax range={30}>
         <div className="max-w-6xl mx-auto">
@@ -111,61 +104,69 @@ export function Skills({
             }
           >
             <SectionHeader
+              eyebrow="Skills"
               activateUnderline={underlineActive}
               underlineDelay={80}
             >
-              Skills
+              The Toolkit
             </SectionHeader>
           </MotionReveal>
 
           {/* Groups */}
-          <div className="space-y-12">
-            {skillGroups.map((group) => (
-              <div key={group.title}>
-                {/* Subheader */}
-                <MotionReveal direction="up" delay={0}>
-                  <div className="mb-6 flex items-center justify-between">
-                    <h3 className="text-xl md:text-2xl text-white/90 font-medium tracking-tight">
-                      {group.title}
-                    </h3>
-                    <div className="hidden md:block h-px w-48 bg-white/10" />
-                  </div>
-                </MotionReveal>
+          <div className="space-y-12 md:space-y-14">
+            {skillGroups.map((group) => {
+              const category = getIconCategory(group.title);
+              return (
+                <div key={group.title}>
+                  {/* Group header row with faint divider */}
+                  <MotionReveal direction="up" delay={0}>
+                    <div className="mb-5 flex items-center gap-4">
+                      <h3 className="font-display shrink-0 text-lg md:text-xl font-semibold tracking-tight text-white/90">
+                        {group.title}
+                      </h3>
+                      <div className="h-px flex-1 bg-gradient-to-r from-white/12 to-transparent" />
+                    </div>
+                  </MotionReveal>
 
-                {/* Single MotionReveal for entire grid instead of individual cards */}
-                <MotionReveal direction="up" delay={0}>
-                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                    {group.items.map((skill, i) => (
-                      <div
-                        key={skill.name}
-                        className="skill-card-container"
-                        style={{
-                          // CSS animation delay for staggered reveal
-                          animationDelay: `${i * 50}ms`,
-                        }}
-                      >
-                        <SkillCard skill={skill} groupTitle={group.title} />
-                      </div>
-                    ))}
-                  </div>
-                </MotionReveal>
-              </div>
-            ))}
+                  {/* Grid — one reveal per group, per-chip CSS stagger */}
+                  <MotionReveal direction="up" delay={60}>
+                    <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5">
+                      {group.items.map((skill, i) => (
+                        <div
+                          key={skill.name}
+                          className="skill-chip-reveal"
+                          style={{ animationDelay: `${i * 60}ms` }}
+                        >
+                          <SkillChip skill={skill} category={category} />
+                        </div>
+                      ))}
+                    </div>
+                  </MotionReveal>
+                </div>
+              );
+            })}
           </div>
         </div>
       </MotionParallax>
 
-      {/* CSS animations for better performance */}
+      {/* Per-chip staggered fade-in (cheap, GPU-friendly) */}
       <style jsx>{`
-        .skill-card-container {
+        .skill-chip-reveal {
           opacity: 0;
-          transform: translateY(20px);
-          animation: skillCardFadeIn 0.6s ease-out forwards;
+          transform: translateY(14px);
+          animation: skillChipIn 0.55s var(--ease-out-expo, ease-out) forwards;
         }
-        @keyframes skillCardFadeIn {
+        @keyframes skillChipIn {
           to {
             opacity: 1;
             transform: translateY(0);
+          }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .skill-chip-reveal {
+            opacity: 1;
+            transform: none;
+            animation: none;
           }
         }
       `}</style>

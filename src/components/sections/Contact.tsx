@@ -1,11 +1,14 @@
 "use client";
 import React, { useState } from "react";
+import { Mail, Phone, Copy, Check, Send, ArrowUpRight } from "lucide-react";
 import { MotionParallax } from "@/components/animations/MotionParallax";
 import { MotionReveal } from "@/components/animations/MotionReveal";
 import { Section } from "@/components/ui/Section";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { SocialLinks } from "@/components/ui/SocialLinks";
+import { profile } from "@/data/profile";
 
 interface FormData {
   name: string;
@@ -21,13 +24,9 @@ interface FormErrors {
 
 export function Contact({
   registry,
-  //linkedin = "https://linkedin.com/in/yourprofile",
-  //github = "https://github.com/yourusername",
-  footnote = "© 2025 Jordan Urbaez-Lu All rights reserved.",
+  footnote = `© ${new Date().getFullYear()} Jordan Urbaez-Lu. All rights reserved.`,
 }: {
   registry: React.RefObject<Record<string, HTMLElement | null>>;
-  linkedin?: string;
-  github?: string;
   footnote?: string;
 }) {
   const [underlineActive, setUnderlineActive] = useState(false);
@@ -37,10 +36,8 @@ export function Contact({
     message: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<
-    "idle" | "success" | "error"
-  >("idle");
+  const [submitted, setSubmitted] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -77,36 +74,31 @@ export function Contact({
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) return;
 
-    setIsSubmitting(true);
-    setSubmitStatus("idle");
+    // No backend — open the visitor's mail client with a prefilled draft.
+    const subject = encodeURIComponent(
+      "Portfolio inquiry from " + formData.name
+    );
+    const body = encodeURIComponent(
+      formData.message + "\n\n— " + formData.name + " (" + formData.email + ")"
+    );
+    window.location.href =
+      "mailto:" + profile.email + "?subject=" + subject + "&body=" + body;
 
+    setSubmitted(true);
+  };
+
+  const handleCopyEmail = async () => {
     try {
-      // Replace this with your actual form submission logic
-      // This could be an API call, email service, etc.
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        setSubmitStatus("success");
-        setFormData({ name: "", email: "", message: "" });
-      } else {
-        throw new Error("Failed to send message");
-      }
-    } catch (error) {
-      console.error("Form submission error:", error);
-      setSubmitStatus("error");
-    } finally {
-      setIsSubmitting(false);
+      await navigator.clipboard.writeText(profile.email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      // Clipboard unavailable — silently ignore; the email is still visible.
     }
   };
 
@@ -114,7 +106,7 @@ export function Contact({
     <Section
       id="contact"
       registry={registry}
-      className="relative py-16 md:py-24 px-4 z-20"
+      className="relative py-20 md:py-28 px-4 z-20"
     >
       <MotionParallax range={35}>
         {/* Section header reveal + underline animation */}
@@ -122,138 +114,193 @@ export function Contact({
           direction="up"
           delay={0}
           onViewportEnter={() => {
-            setTimeout(() => setUnderlineActive(true), 400);
+            setTimeout(() => setUnderlineActive(true), 300);
           }}
         >
           <SectionHeader
+            eyebrow="Contact"
             activateUnderline={underlineActive}
             underlineDelay={80}
           >
-            Let’s Connect
+            Let&rsquo;s build something
           </SectionHeader>
         </MotionReveal>
 
-        <MotionReveal direction="up">
-          <div className="max-w-4xl mx-auto">
-            {/* Contact Info Card */}
-            <Card padding="p-4" className="mb-12 max-w-lg mx-auto mt-6">
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-center">
-                {/* Email */}
-                <a
-                  href="mailto:jordana.urbaez@gmail.com"
-                  className="w-fit mx-auto flex items-center gap-3 text-white/80 hover:text-white transition-colors group"
-                >
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                    <svg
-                      className="w-4 h-4 sm:w-5 sm:h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-sm font-medium">
-                    jordana.urbaez@gmail.com
-                  </span>
-                </a>
-
-                {/* Phone */}
-                <a
-                  href="tel:9782897135"
-                  className="w-fit mx-auto flex items-center gap-3 text-white/80 hover:text-white transition-colors group"
-                >
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                    <svg
-                      className="w-4 h-4 sm:w-5 sm:h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-sm font-medium">(978) 289-7135</span>
-                </a>
-              </div>
-            </Card>
-
-            <p className="text-xl text-white/70 font-light max-w-2xl mx-auto mb-12 text-center">
-              I’m actively seeking new frontend/full-stack development
-              opportunities!
+        <div className="mx-auto max-w-3xl">
+          {/* Invite line */}
+          <MotionReveal direction="up" delay={40}>
+            <p className="mx-auto max-w-xl text-center text-lg font-light leading-relaxed text-white/70 md:text-xl">
+              Hiring, collaborating, or just curious? I&rsquo;m{" "}
+              <span className="text-aurora font-normal">
+                open to new opportunities
+              </span>{" "}
+              and reply within a day.
             </p>
+          </MotionReveal>
 
-            <div className="grid md:grid-cols-1 gap-12 items-start">
-              {/* Contact Form */}
-              <div className="order-2 md:order-1">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Name Field */}
-                  <div>
-                    <label
-                      htmlFor="name"
-                      className="block text-sm font-medium text-white/80 mb-2"
-                    >
-                      Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors ${
-                        errors.name ? "border-red-400" : "border-white/20"
-                      }`}
-                      placeholder="Your full name"
-                    />
-                    {errors.name && (
-                      <p className="mt-1 text-sm text-red-400">{errors.name}</p>
-                    )}
+          {/* Direct contact row: email (with copy) + phone */}
+          <MotionReveal direction="up" delay={100}>
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap">
+              {/* Email + copy */}
+              <div className="group inline-flex items-center gap-1 rounded-xl border border-white/10 bg-white/[0.04] p-1 backdrop-blur-md transition-colors hover:border-indigo-300/30">
+                <a
+                  href={`mailto:${profile.email}`}
+                  className="inline-flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-white/80 transition-colors hover:text-white"
+                >
+                  <Mail size={16} className="text-indigo-300" />
+                  {profile.email}
+                </a>
+                <button
+                  type="button"
+                  onClick={handleCopyEmail}
+                  aria-label={copied ? "Email copied" : "Copy email address"}
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-white/55 transition-all hover:bg-white/[0.08] hover:text-white"
+                >
+                  {copied ? (
+                    <Check size={16} className="text-emerald-400" />
+                  ) : (
+                    <Copy size={16} />
+                  )}
+                </button>
+                <span
+                  aria-live="polite"
+                  className={`pr-2 text-xs font-medium text-emerald-400 transition-opacity duration-200 ${
+                    copied ? "opacity-100" : "opacity-0"
+                  }`}
+                >
+                  Copied
+                </span>
+              </div>
+
+              {/* Phone */}
+              <a
+                href={profile.phoneHref}
+                className="inline-flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-medium text-white/80 backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-indigo-300/30 hover:text-white"
+              >
+                <Phone size={16} className="text-teal-400" />
+                {profile.phone}
+              </a>
+            </div>
+          </MotionReveal>
+
+          {/* Social links */}
+          <MotionReveal direction="up" delay={160}>
+            <div className="mt-6 flex justify-center">
+              <SocialLinks />
+            </div>
+          </MotionReveal>
+
+          {/* Contact form */}
+          <MotionReveal direction="up" delay={220}>
+            <Card glow padding="p-6 md:p-8" className="mt-12">
+              {submitted ? (
+                <div className="flex flex-col items-center gap-4 py-8 text-center">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-400/10">
+                    <Check size={26} className="text-emerald-400" />
                   </div>
-
-                  {/* Email Field */}
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium text-white/80 mb-2"
+                  <h3 className="text-xl font-semibold text-white">
+                    Your draft is ready
+                  </h3>
+                  <p className="max-w-md text-sm leading-relaxed text-white/60">
+                    Your email client should have opened with the message
+                    pre-filled. If it didn&rsquo;t, reach me directly at{" "}
+                    <a
+                      href={`mailto:${profile.email}`}
+                      className="text-indigo-300 underline-offset-2 hover:underline"
                     >
-                      Email *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors ${
-                        errors.email ? "border-red-400" : "border-white/20"
-                      }`}
-                      placeholder="your.email@example.com"
-                    />
-                    {errors.email && (
-                      <p className="mt-1 text-sm text-red-400">
-                        {errors.email}
-                      </p>
-                    )}
+                      {profile.email}
+                    </a>
+                    .
+                  </p>
+                  <Button
+                    as="button"
+                    type="button"
+                    variant="glass"
+                    size="sm"
+                    onClick={() => {
+                      setSubmitted(false);
+                      setFormData({ name: "", email: "", message: "" });
+                    }}
+                  >
+                    Send another
+                  </Button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} noValidate className="space-y-6">
+                  {/* Name + Email */}
+                  <div className="grid gap-6 sm:grid-cols-2">
+                    {/* Name Field */}
+                    <div>
+                      <label
+                        htmlFor="name"
+                        className="mb-2 block text-sm font-medium text-white/70"
+                      >
+                        Name
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        aria-invalid={!!errors.name}
+                        aria-describedby={errors.name ? "name-error" : undefined}
+                        className={`w-full rounded-xl border bg-white/[0.04] px-4 py-3 text-white placeholder-white/35 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-400/70 ${
+                          errors.name ? "border-rose-400/70" : "border-white/12"
+                        }`}
+                        placeholder="Your full name"
+                      />
+                      {errors.name && (
+                        <p
+                          id="name-error"
+                          className="mt-1.5 text-sm text-rose-400"
+                        >
+                          {errors.name}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Email Field */}
+                    <div>
+                      <label
+                        htmlFor="email"
+                        className="mb-2 block text-sm font-medium text-white/70"
+                      >
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        aria-invalid={!!errors.email}
+                        aria-describedby={
+                          errors.email ? "email-error" : undefined
+                        }
+                        className={`w-full rounded-xl border bg-white/[0.04] px-4 py-3 text-white placeholder-white/35 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-400/70 ${
+                          errors.email ? "border-rose-400/70" : "border-white/12"
+                        }`}
+                        placeholder="you@company.com"
+                      />
+                      {errors.email && (
+                        <p
+                          id="email-error"
+                          className="mt-1.5 text-sm text-rose-400"
+                        >
+                          {errors.email}
+                        </p>
+                      )}
+                    </div>
                   </div>
 
                   {/* Message Field */}
                   <div>
                     <label
                       htmlFor="message"
-                      className="block text-sm font-medium text-white/80 mb-2"
+                      className="mb-2 block text-sm font-medium text-white/70"
                     >
-                      Message *
+                      Message
                     </label>
                     <textarea
                       id="message"
@@ -261,56 +308,53 @@ export function Contact({
                       value={formData.message}
                       onChange={handleInputChange}
                       rows={5}
-                      className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors resize-vertical ${
-                        errors.message ? "border-red-400" : "border-white/20"
+                      aria-invalid={!!errors.message}
+                      aria-describedby={
+                        errors.message ? "message-error" : undefined
+                      }
+                      className={`w-full resize-y rounded-xl border bg-white/[0.04] px-4 py-3 text-white placeholder-white/35 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-400/70 ${
+                        errors.message ? "border-rose-400/70" : "border-white/12"
                       }`}
-                      placeholder="Say hi!..."
+                      placeholder="Tell me about the role or project — and what success looks like."
                     />
                     {errors.message && (
-                      <p className="mt-1 text-sm text-red-400">
+                      <p
+                        id="message-error"
+                        className="mt-1.5 text-sm text-rose-400"
+                      >
                         {errors.message}
                       </p>
                     )}
                   </div>
 
-                  {/* Submit Button */}
+                  {/* Submit Button — primary conversion moment */}
                   <Button
                     as="button"
                     type="submit"
                     variant="primary"
-                    disabled={isSubmitting}
+                    size="lg"
                     className="w-full"
                   >
-                    {isSubmitting ? "Sending..." : "Send Message"}
+                    <Send size={18} />
+                    Send message
                   </Button>
 
-                  {/* Status Messages */}
-                  {submitStatus === "success" && (
-                    <div className="p-4 bg-green-500/10 border border-green-400/20 rounded-lg">
-                      <p className="text-green-400 text-sm">
-                        Thanks for reaching out! I’ll review your opportunity
-                        and respond within 24 hours.
-                      </p>
-                    </div>
-                  )}
-
-                  {submitStatus === "error" && (
-                    <div className="p-4 bg-red-500/10 border border-red-400/20 rounded-lg">
-                      <p className="text-red-400 text-sm">
-                        Sorry, there was an error sending your message. Please
-                        try again or contact me directly.
-                      </p>
-                    </div>
-                  )}
+                  <p className="flex items-center justify-center gap-1.5 text-center text-xs text-white/40">
+                    Opens your email app with a ready-to-send draft
+                    <ArrowUpRight size={13} />
+                  </p>
                 </form>
-              </div>
-            </div>
+              )}
+            </Card>
+          </MotionReveal>
 
-            <div className="border-t border-white/10 pt-8 mt-16 text-center">
-              <p className="text-white/40 text-sm font-light">{footnote}</p>
+          {/* Footer */}
+          <MotionReveal direction="up" delay={280}>
+            <div className="mt-16 border-t border-white/10 pt-8 text-center">
+              <p className="text-sm font-light text-white/40">{footnote}</p>
             </div>
-          </div>
-        </MotionReveal>
+          </MotionReveal>
+        </div>
       </MotionParallax>
     </Section>
   );

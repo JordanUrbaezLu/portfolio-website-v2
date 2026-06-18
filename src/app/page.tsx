@@ -14,14 +14,6 @@ const About = dynamic(
   { ssr: true }
 );
 
-const Projects = dynamic(
-  () =>
-    import("@/components/sections/Projects").then((m) => ({
-      default: m.Projects,
-    })),
-  { ssr: true }
-);
-
 const Skills = dynamic(
   () =>
     import("@/components/sections/Skills").then((m) => ({ default: m.Skills })),
@@ -49,7 +41,6 @@ const portfolioSections = [
   { id: "home", label: "Home" },
   { id: "about", label: "About" },
   { id: "experience", label: "Experience" },
-  { id: "projects", label: "Projects" },
   { id: "skills", label: "Skills" },
   { id: "contact", label: "Contact" },
 ];
@@ -60,7 +51,7 @@ export default function HomePage() {
 
   return (
     <div className="relative min-h-screen">
-      <Background variant="sunset" />
+      <Background />
       <SiteNav active={active} sections={portfolioSections} />
 
       {/* Hero loads immediately */}
@@ -69,7 +60,6 @@ export default function HomePage() {
       {/* All other sections lazy load */}
       <About registry={registry} />
       <Experience registry={registry} />
-      <Projects registry={registry} />
       <Skills registry={registry} />
       <Contact registry={registry} />
     </div>
