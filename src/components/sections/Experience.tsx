@@ -1,131 +1,156 @@
-"use client";
-import React, { useState } from "react";
-import { MotionParallax } from "@/components/animations/MotionParallax";
-import { MotionReveal } from "@/components/animations/MotionReveal";
-import { Section } from "@/components/ui/Section";
-import { SectionHeader } from "@/components/ui/SectionHeader";
-import { Card } from "@/components/ui/Card";
-import { TechBadge } from "@/components/ui/TechBadge";
-import { CompanyLogo } from "@/components/ui/CompanyLogo";
-import { experiences } from "@/data/experiences";
+import { SectionHead } from "@/components/ui/SectionHead";
+import { WorkAxis } from "@/components/instrument/WorkAxis";
+import { experiences, TIMELINE } from "@/data/experiences";
 
-export function Experience({
-  registry,
-}: {
-  registry: React.RefObject<Record<string, HTMLElement | null>>;
-}) {
-  // Track when to animate the SectionHeader underline
-  const [underlineActive, setUnderlineActive] = useState(false);
+const SPAN = TIMELINE.end - TIMELINE.start;
 
+/** Position on the shared axis, as a percentage. */
+function place(start: number, end: number | null) {
+  const left = ((start - TIMELINE.start) / SPAN) * 100;
+  const width = (((end ?? TIMELINE.end) - start) / SPAN) * 100;
+  return { left: `${left}%`, width: `${width}%` };
+}
+
+/** "3 yr 4 mo" — the quantity the bar's length encodes, said out loud. */
+function tenure(start: number, end: number | null): string {
+  const total = (end ?? TIMELINE.end) - start;
+  let yr = Math.floor(total);
+  let mo = Math.round((total - yr) * 12);
+  if (mo === 12) {
+    yr += 1;
+    mo = 0;
+  }
+  if (yr === 0) return `${mo} mo`;
+  if (mo === 0) return `${yr} yr`;
+  return `${yr} yr ${mo} mo`;
+}
+
+export function Experience() {
   return (
-    <Section
-      id="experience"
-      registry={registry}
-      className="relative py-20 md:py-28 px-4 z-20"
-    >
-      <MotionParallax range={40}>
-        <div className="mx-auto max-w-4xl">
-          {/* Header + underline timing */}
-          <MotionReveal
-            direction="up"
-            delay={0}
-            onViewportEnter={() =>
-              setTimeout(() => setUnderlineActive(true), 300)
-            }
-          >
-            <SectionHeader
-              eyebrow="Experience"
-              activateUnderline={underlineActive}
-              underlineDelay={80}
-            >
-              Where I&apos;ve shipped
-            </SectionHeader>
-          </MotionReveal>
+    <section id="work" className="px-4 pt-28 md:px-5 md:pt-36">
+      <div className="mx-auto max-w-[86rem]">
+        <SectionHead
+          code="Work"
+          title="Where the numbers came from"
+          note="Bar length is real tenure on a shared time axis — the chart is the dates, not a decoration of them."
+        />
 
-          {/* Timeline */}
-          <div className="relative mx-auto max-w-3xl">
-            {/* Vertical aurora rail — desktop only, anchored to node centers */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute bottom-3 left-[7px] top-3 hidden w-px md:block"
-            >
-              <div className="h-full w-px bg-gradient-to-b from-indigo-400/50 via-violet-400/25 to-transparent" />
-            </div>
+        {/* Shared axis with a scroll playhead. Sticky, because a scale that
+            scrolls away is a caption: every bar below has to stay readable
+            against visible ticks. */}
+        <WorkAxis />
 
-            <ol className="space-y-8 md:space-y-10">
-              {experiences.map((exp, index) => {
-                const isLatest = index === 0;
-                return (
-                  <li key={exp.title} className="relative md:pl-12">
-                    <MotionReveal direction="up" delay={index * 90}>
-                      {/* Node dot — desktop, sits on the rail */}
-                      <span
-                        aria-hidden
-                        className="absolute top-7 hidden -translate-x-1/2 md:block"
-                        style={{ left: "7px" }}
-                      >
-                        <span className="relative flex h-3.5 w-3.5 items-center justify-center">
-                          {isLatest && (
-                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-indigo-400 opacity-50" />
-                          )}
-                          <span
-                            className={
-                              isLatest
-                                ? "relative inline-flex h-3.5 w-3.5 rounded-full bg-gradient-to-tr from-indigo-400 to-violet-400 shadow-[0_0_12px_rgba(129,140,248,0.8)] ring-2 ring-indigo-300/30"
-                                : "relative inline-flex h-2.5 w-2.5 rounded-full bg-white/35 ring-2 ring-white/10"
-                            }
-                          />
-                        </span>
-                      </span>
+        <ol className="mt-2">
+          {experiences.map((exp) => {
+            const current = exp.end === null;
+            return (
+              <li
+                key={exp.id}
+                className="group border-b border-rule py-9 md:py-11"
+              >
+                {/* Hovering anywhere in the row lights its bar and says the
+                    quantity the bar length encodes. Linked highlighting —
+                    the chart and the prose confirm each other. */}
+                <div
+                  aria-hidden
+                  className="relative mb-7 hidden h-1.5 w-full bg-panel-2 md:block"
+                >
+                  <span
+                    className={`bar-plot absolute inset-y-0 transition-colors duration-200 ${
+                      current
+                        ? "bg-paper"
+                        : "bg-rule-lit group-hover:bg-dim"
+                    }`}
+                    style={place(exp.start, exp.end)}
+                  />
+                  <span
+                    className="label absolute -top-6 whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover:opacity-100 !text-paper"
+                    style={{ left: place(exp.start, exp.end).left }}
+                  >
+                    {tenure(exp.start, exp.end)}
+                  </span>
+                  {current && (
+                    <span className="live-dot absolute right-0 top-1/2 h-2.5 w-2.5 -translate-y-1/2 translate-x-1/2 rounded-full bg-paper" />
+                  )}
+                </div>
 
-                      <Card
-                        interactive
-                        glow={isLatest}
-                        padding="p-6 md:p-7"
-                      >
-                        {/* Top row: company logo + name + period */}
-                        <div className="flex items-center gap-3">
-                          <CompanyLogo company={exp.company} />
-                          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1">
-                            <p className="text-sm font-semibold uppercase tracking-[0.12em] text-aurora">
-                              {exp.company}
-                            </p>
-                            {isLatest && (
-                              <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[0.65rem] font-medium uppercase tracking-wider text-emerald-300">
-                                Current
+                <div className="grid gap-x-12 gap-y-6 lg:grid-cols-[19rem_minmax(0,1fr)]">
+                  {/* ── Identity ── */}
+                  <div>
+                    <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                      <h3 className="display-sm text-xl text-paper">
+                        {exp.company}
+                      </h3>
+                      {current && (
+                        <span className="label !text-good">Current</span>
+                      )}
+                    </div>
+                    <p className="mt-2 text-[0.9375rem] leading-snug text-paper">
+                      {exp.title}
+                    </p>
+                    <p className="label mt-3">{exp.period}</p>
+                    <p className="label mt-1">{exp.location}</p>
+                  </div>
+
+                  {/* ── Substance ── */}
+                  <div>
+                    <p className="text-[1.0625rem] leading-relaxed text-dim">
+                      {exp.summary}
+                    </p>
+
+                    {exp.metrics.length > 0 && (
+                      <dl className="mt-7 grid grid-cols-2 gap-x-8 gap-y-5 sm:grid-cols-3">
+                        {exp.metrics.map((m) => (
+                          <div key={m.label}>
+                            <dt className="sr-only">{m.label}</dt>
+                            <dd>
+                              <span className="flex items-baseline gap-1">
+                                <span
+                                  aria-hidden
+                                  className="readout text-xs text-faint"
+                                >
+                                  {m.dir === "down" ? "↓" : "↑"}
+                                </span>
+                                <span className="readout text-2xl font-semibold leading-none tracking-tight text-paper">
+                                  {m.value}
+                                </span>
+                                <span className="readout text-xs leading-none text-dim">
+                                  {m.unit}
+                                </span>
                               </span>
-                            )}
-                            <span className="ml-auto text-xs font-medium tracking-wide text-white/45">
-                              {exp.period}
-                            </span>
+                              <span className="label mt-2 block leading-snug">
+                                {m.label}
+                              </span>
+                            </dd>
                           </div>
-                        </div>
+                        ))}
+                      </dl>
+                    )}
 
-                        {/* Role title */}
-                        <h3 className="mt-3 font-display text-xl font-semibold tracking-tight text-white md:text-2xl">
-                          {exp.title}
-                        </h3>
+                    <ul className="mt-7 space-y-3">
+                      {exp.notes.map((note) => (
+                        <li
+                          key={note}
+                          className="flex gap-3 text-[0.9375rem] leading-relaxed text-dim"
+                        >
+                          <span aria-hidden className="text-faint">
+                            —
+                          </span>
+                          <span>{note}</span>
+                        </li>
+                      ))}
+                    </ul>
 
-                        {/* Description */}
-                        <p className="mt-3 text-[0.95rem] font-light leading-relaxed text-white/70">
-                          {exp.description}
-                        </p>
-
-                        {/* Highlights — brand-gradient tech badges */}
-                        <div className="mt-5 flex flex-wrap gap-2">
-                          {exp.highlights.map((h) => (
-                            <TechBadge key={h} name={h} />
-                          ))}
-                        </div>
-                      </Card>
-                    </MotionReveal>
-                  </li>
-                );
-              })}
-            </ol>
-          </div>
-        </div>
-      </MotionParallax>
-    </Section>
+                    <p className="readout mt-7 text-[0.6875rem] text-faint">
+                      {exp.stack.join("  ·  ")}
+                    </p>
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    </section>
   );
 }

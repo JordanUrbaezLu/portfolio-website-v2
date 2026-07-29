@@ -1,67 +1,25 @@
-"use client";
+import { PageShell } from "@/components/layout/PageShell";
+import { Hero } from "@/components/sections/Hero";
+import { Experience } from "@/components/sections/Experience";
+import { About } from "@/components/sections/About";
+import { Skills } from "@/components/sections/Skills";
+import { Contact } from "@/components/sections/Contact";
+import { Footer } from "@/components/layout/Footer";
 
-import { useRef } from "react";
-import dynamic from "next/dynamic";
-import { Background } from "@/components/layout/Background";
-import { SiteNav } from "@/components/layout/SiteNav";
-import { useActiveSection } from "@/hooks/useActiveSection";
-import { Home } from "@/components/sections/Hero";
-
-// Lazy load all sections below the fold
-const About = dynamic(
-  () =>
-    import("@/components/sections/About").then((m) => ({ default: m.About })),
-  { ssr: true }
-);
-
-const Skills = dynamic(
-  () =>
-    import("@/components/sections/Skills").then((m) => ({ default: m.Skills })),
-  { ssr: true }
-);
-
-const Experience = dynamic(
-  () =>
-    import("@/components/sections/Experience").then((m) => ({
-      default: m.Experience,
-    })),
-  { ssr: true }
-);
-
-const Contact = dynamic(
-  () =>
-    import("@/components/sections/Contact").then((m) => ({
-      default: m.Contact,
-    })),
-  { ssr: true }
-);
-
-// Define portfolio sections
-const portfolioSections = [
-  { id: "home", label: "Home" },
-  { id: "about", label: "About" },
-  { id: "experience", label: "Experience" },
-  { id: "skills", label: "Skills" },
-  { id: "contact", label: "Contact" },
-];
-
+/**
+ * The page itself is a server component — only the chrome that has to react
+ * to the visitor (nav state, the instrument) ships JavaScript. The content a
+ * hiring manager came for is in the HTML.
+ */
 export default function HomePage() {
-  const registry = useRef<Record<string, HTMLElement | null>>({});
-  const active = useActiveSection(registry);
-
   return (
-    <div className="relative min-h-screen">
-      <Background />
-      <SiteNav active={active} sections={portfolioSections} />
-
-      {/* Hero loads immediately */}
-      <Home registry={registry} />
-
-      {/* All other sections lazy load */}
-      <About registry={registry} />
-      <Experience registry={registry} />
-      <Skills registry={registry} />
-      <Contact registry={registry} />
-    </div>
+    <PageShell>
+      <Hero />
+      <Experience />
+      <About />
+      <Skills />
+      <Contact />
+      <Footer year={new Date().getFullYear()} />
+    </PageShell>
   );
 }

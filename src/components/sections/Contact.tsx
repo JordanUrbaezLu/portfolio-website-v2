@@ -1,361 +1,326 @@
 "use client";
-import React, { useState } from "react";
-import { Mail, Phone, Copy, Check, Send, ArrowUpRight } from "lucide-react";
-import { MotionParallax } from "@/components/animations/MotionParallax";
-import { MotionReveal } from "@/components/animations/MotionReveal";
-import { Section } from "@/components/ui/Section";
-import { SectionHeader } from "@/components/ui/SectionHeader";
-import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
-import { SocialLinks } from "@/components/ui/SocialLinks";
-import { profile } from "@/data/profile";
+import { useState } from "react";
+import { SectionHead } from "@/components/ui/SectionHead";
+import { askAbout, profile } from "@/data/profile";
 
-interface FormData {
+interface Fields {
   name: string;
   email: string;
   message: string;
 }
+type Errors = Partial<Record<keyof Fields, string>>;
 
-interface FormErrors {
-  name?: string;
-  email?: string;
-  message?: string;
-}
+const EMPTY: Fields = { name: "", email: "", message: "" };
 
-export function Contact({
-  registry,
-  footnote = `© ${new Date().getFullYear()} Jordan Urbaez-Lu. All rights reserved.`,
-}: {
-  registry: React.RefObject<Record<string, HTMLElement | null>>;
-  footnote?: string;
-}) {
-  const [underlineActive, setUnderlineActive] = useState(false);
-  const [formData, setFormData] = useState<FormData>({
-    name: "",
-    email: "",
-    message: "",
-  });
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [submitted, setSubmitted] = useState(false);
+const inputBase =
+  "w-full border bg-panel px-4 py-3 text-[0.9375rem] text-paper placeholder:text-faint focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper";
+
+export function Contact() {
+  const [fields, setFields] = useState<Fields>(EMPTY);
+  const [errors, setErrors] = useState<Errors>({});
+  const [handedOff, setHandedOff] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [copiedMessage, setCopiedMessage] = useState(false);
 
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required";
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address";
-    }
-
-    if (!formData.message.trim()) {
-      newErrors.message = "Message is required";
-    } else if (formData.message.trim().length < 10) {
-      newErrors.message = "Message should be at least 10 characters long";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const validate = (): boolean => {
+    const next: Errors = {};
+    if (!fields.name.trim()) next.name = "Enter your name.";
+    if (!fields.email.trim()) next.email = "Enter your email address.";
+    else if (!/\S+@\S+\.\S+/.test(fields.email))
+      next.email = "That address is missing an @ or a domain.";
+    if (!fields.message.trim()) next.message = "Add a message.";
+    else if (fields.message.trim().length < 10)
+      next.message = "Add a little more — at least 10 characters.";
+    setErrors(next);
+    return Object.keys(next).length === 0;
   };
 
-  const handleInputChange = (
+  const change = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-
-    // Clear error when user starts typing
-    if (errors[name as keyof FormErrors]) {
+    setFields((prev) => ({ ...prev, [name]: value }));
+    if (errors[name as keyof Fields]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const plainMessage = `${fields.message}\n\n— ${fields.name} (${fields.email})`;
+
+  const submit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!validateForm()) return;
-
-    // No backend — open the visitor's mail client with a prefilled draft.
-    const subject = encodeURIComponent(
-      "Portfolio inquiry from " + formData.name
-    );
-    const body = encodeURIComponent(
-      formData.message + "\n\n— " + formData.name + " (" + formData.email + ")"
-    );
-    window.location.href =
-      "mailto:" + profile.email + "?subject=" + subject + "&body=" + body;
-
-    setSubmitted(true);
+    if (!validate()) return;
+    // No backend by design. Hand off to the visitor's mail client.
+    //
+    // There is no reliable way to detect whether a mailto: handler exists, so
+    // this must never claim the message was sent. Plenty of desktop Gmail
+    // users have no handler registered at all — for them the old "your email
+    // app should be open" screen destroyed the draft and reported success.
+    const subject = encodeURIComponent(`Portfolio enquiry from ${fields.name}`);
+    window.location.href = `mailto:${profile.email}?subject=${subject}&body=${encodeURIComponent(
+      plainMessage
+    )}`;
+    setHandedOff(true);
   };
 
-  const handleCopyEmail = async () => {
+  const copyMessage = async () => {
+    try {
+      await navigator.clipboard.writeText(plainMessage);
+      setCopiedMessage(true);
+      window.setTimeout(() => setCopiedMessage(false), 1800);
+    } catch {
+      // Clipboard blocked — the message is still in the box below.
+    }
+  };
+
+  const copyEmail = async () => {
     try {
       await navigator.clipboard.writeText(profile.email);
       setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
+      window.setTimeout(() => setCopied(false), 1800);
     } catch {
-      // Clipboard unavailable — silently ignore; the email is still visible.
+      // Clipboard blocked — the address is on screen either way.
     }
   };
 
   return (
-    <Section
-      id="contact"
-      registry={registry}
-      className="relative py-20 md:py-28 px-4 z-20"
-    >
-      <MotionParallax range={35}>
-        {/* Section header reveal + underline animation */}
-        <MotionReveal
-          direction="up"
-          delay={0}
-          onViewportEnter={() => {
-            setTimeout(() => setUnderlineActive(true), 300);
-          }}
-        >
-          <SectionHeader
-            eyebrow="Contact"
-            activateUnderline={underlineActive}
-            underlineDelay={80}
-          >
-            Let&rsquo;s build something
-          </SectionHeader>
-        </MotionReveal>
+    <section id="contact" data-island className="px-4 pt-28 md:px-5 md:pt-36">
+      <div className="mx-auto max-w-[86rem]">
+        <SectionHead code="Contact" title="Tell me what you're building" />
 
-        <div className="mx-auto max-w-3xl">
-          {/* Invite line */}
-          <MotionReveal direction="up" delay={40}>
-            <p className="mx-auto max-w-xl text-center text-lg font-light leading-relaxed text-white/70 md:text-xl">
-              Hiring, collaborating, or just curious? I&rsquo;m{" "}
-              <span className="text-aurora font-normal">
-                open to new opportunities
-              </span>{" "}
-              and reply within a day.
+        <div className="mt-12 grid gap-x-16 gap-y-12 lg:grid-cols-[minmax(0,1fr)_26rem]">
+          {/* ── Direct routes first. The form is the slow path. ── */}
+          <div>
+            <p className="max-w-[46ch] text-[1.25rem] leading-relaxed text-paper">
+              I&rsquo;m open to senior and staff frontend roles. Tell me what
+              you&rsquo;re building and what fast has to mean for it. I reply
+              within a day.
             </p>
-          </MotionReveal>
 
-          {/* Direct contact row: email (with copy) + phone */}
-          <MotionReveal direction="up" delay={100}>
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap">
-              {/* Email + copy */}
-              <div className="group inline-flex items-center gap-1 rounded-xl border border-white/10 bg-white/[0.04] p-1 backdrop-blur-md transition-colors hover:border-indigo-300/30">
-                <a
-                  href={`mailto:${profile.email}`}
-                  className="inline-flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-white/80 transition-colors hover:text-white"
-                >
-                  <Mail size={16} className="text-indigo-300" />
-                  {profile.email}
-                </a>
-                <button
-                  type="button"
-                  onClick={handleCopyEmail}
-                  aria-label={copied ? "Email copied" : "Copy email address"}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-white/55 transition-all hover:bg-white/[0.08] hover:text-white"
-                >
-                  {copied ? (
-                    <Check size={16} className="text-emerald-400" />
-                  ) : (
-                    <Copy size={16} />
-                  )}
-                </button>
-                <span
-                  aria-live="polite"
-                  className={`pr-2 text-xs font-medium text-emerald-400 transition-opacity duration-200 ${
-                    copied ? "opacity-100" : "opacity-0"
-                  }`}
-                >
-                  Copied
-                </span>
-              </div>
-
-              {/* Phone */}
-              <a
-                href={profile.phoneHref}
-                className="inline-flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-medium text-white/80 backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-indigo-300/30 hover:text-white"
-              >
-                <Phone size={16} className="text-teal-400" />
-                {profile.phone}
-              </a>
-            </div>
-          </MotionReveal>
-
-          {/* Social links */}
-          <MotionReveal direction="up" delay={160}>
-            <div className="mt-6 flex justify-center">
-              <SocialLinks />
-            </div>
-          </MotionReveal>
-
-          {/* Contact form */}
-          <MotionReveal direction="up" delay={220}>
-            <Card glow padding="p-6 md:p-8" className="mt-12">
-              {submitted ? (
-                <div className="flex flex-col items-center gap-4 py-8 text-center">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-400/10">
-                    <Check size={26} className="text-emerald-400" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-white">
-                    Your draft is ready
-                  </h3>
-                  <p className="max-w-md text-sm leading-relaxed text-white/60">
-                    Your email client should have opened with the message
-                    pre-filled. If it didn&rsquo;t, reach me directly at{" "}
-                    <a
-                      href={`mailto:${profile.email}`}
-                      className="text-indigo-300 underline-offset-2 hover:underline"
-                    >
-                      {profile.email}
-                    </a>
-                    .
-                  </p>
-                  <Button
-                    as="button"
+            <dl className="mt-10 max-w-[34rem]">
+              <div className="silkscreen flex flex-wrap items-center gap-x-4 gap-y-2 py-4">
+                <dt className="label w-20 shrink-0">Email</dt>
+                <dd className="flex flex-wrap items-center gap-3">
+                  <a
+                    href={`mailto:${profile.email}`}
+                    className="link-underline text-[0.9375rem] text-paper"
+                  >
+                    {profile.email}
+                  </a>
+                  <button
                     type="button"
-                    variant="glass"
-                    size="sm"
-                    onClick={() => {
-                      setSubmitted(false);
-                      setFormData({ name: "", email: "", message: "" });
-                    }}
+                    onClick={copyEmail}
+                    className="border border-rule-lit px-2 py-1 transition-colors hover:bg-panel"
                   >
-                    Send another
-                  </Button>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} noValidate className="space-y-6">
-                  {/* Name + Email */}
-                  <div className="grid gap-6 sm:grid-cols-2">
-                    {/* Name Field */}
-                    <div>
-                      <label
-                        htmlFor="name"
-                        className="mb-2 block text-sm font-medium text-white/70"
-                      >
-                        Name
-                      </label>
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        aria-invalid={!!errors.name}
-                        aria-describedby={errors.name ? "name-error" : undefined}
-                        className={`w-full rounded-xl border bg-white/[0.04] px-4 py-3 text-white placeholder-white/35 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-400/70 ${
-                          errors.name ? "border-rose-400/70" : "border-white/12"
-                        }`}
-                        placeholder="Your full name"
-                      />
-                      {errors.name && (
-                        <p
-                          id="name-error"
-                          className="mt-1.5 text-sm text-rose-400"
-                        >
-                          {errors.name}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Email Field */}
-                    <div>
-                      <label
-                        htmlFor="email"
-                        className="mb-2 block text-sm font-medium text-white/70"
-                      >
-                        Email
-                      </label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        aria-invalid={!!errors.email}
-                        aria-describedby={
-                          errors.email ? "email-error" : undefined
-                        }
-                        className={`w-full rounded-xl border bg-white/[0.04] px-4 py-3 text-white placeholder-white/35 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-400/70 ${
-                          errors.email ? "border-rose-400/70" : "border-white/12"
-                        }`}
-                        placeholder="you@company.com"
-                      />
-                      {errors.email && (
-                        <p
-                          id="email-error"
-                          className="mt-1.5 text-sm text-rose-400"
-                        >
-                          {errors.email}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Message Field */}
-                  <div>
-                    <label
-                      htmlFor="message"
-                      className="mb-2 block text-sm font-medium text-white/70"
-                    >
-                      Message
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      rows={5}
-                      aria-invalid={!!errors.message}
-                      aria-describedby={
-                        errors.message ? "message-error" : undefined
-                      }
-                      className={`w-full resize-y rounded-xl border bg-white/[0.04] px-4 py-3 text-white placeholder-white/35 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-400/70 ${
-                        errors.message ? "border-rose-400/70" : "border-white/12"
-                      }`}
-                      placeholder="Tell me about the role or project — and what success looks like."
-                    />
-                    {errors.message && (
-                      <p
-                        id="message-error"
-                        className="mt-1.5 text-sm text-rose-400"
-                      >
-                        {errors.message}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Submit Button — primary conversion moment */}
-                  <Button
-                    as="button"
-                    type="submit"
-                    variant="primary"
-                    size="lg"
-                    className="w-full"
+                    <span className="label !text-paper">
+                      {copied ? "Copied" : "Copy"}
+                    </span>
+                  </button>
+                </dd>
+              </div>
+              <div className="silkscreen flex flex-wrap items-center gap-x-4 gap-y-2 py-4">
+                <dt className="label w-20 shrink-0">Phone</dt>
+                <dd>
+                  <a
+                    href={profile.phoneHref}
+                    className="link-underline text-[0.9375rem] text-paper"
                   >
-                    <Send size={18} />
-                    Send message
-                  </Button>
+                    {profile.phone}
+                  </a>
+                </dd>
+              </div>
+              <div className="silkscreen flex flex-wrap items-center gap-x-4 gap-y-2 py-4">
+                <dt className="label w-20 shrink-0">Elsewhere</dt>
+                <dd className="flex flex-wrap gap-5">
+                  <a
+                    href={profile.socials.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="link-underline text-[0.9375rem] text-paper"
+                  >
+                    LinkedIn ↗
+                  </a>
+                  <a
+                    href={profile.socials.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="link-underline text-[0.9375rem] text-paper"
+                  >
+                    GitHub ↗
+                  </a>
+                  <a
+                    href={profile.resumeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="link-underline text-[0.9375rem] text-paper"
+                  >
+                    Résumé ↗
+                  </a>
+                </dd>
+              </div>
+            </dl>
 
-                  <p className="flex items-center justify-center gap-1.5 text-center text-xs text-white/40">
-                    Opens your email app with a ready-to-send draft
-                    <ArrowUpRight size={13} />
-                  </p>
-                </form>
-              )}
-            </Card>
-          </MotionReveal>
-
-          {/* Footer */}
-          <MotionReveal direction="up" delay={280}>
-            <div className="mt-16 border-t border-white/10 pt-8 text-center">
-              <p className="text-sm font-light text-white/40">{footnote}</p>
+            {/* Give them a specific thing to open with, not a blank page. */}
+            <div className="mt-12 max-w-[46rem]">
+              <p className="label">Ask me about</p>
+              <ul className="mt-5">
+                {askAbout.map((item) => (
+                  <li
+                    key={item}
+                    className="silkscreen flex gap-4 py-4 text-[0.9375rem] leading-relaxed text-dim"
+                  >
+                    <span aria-hidden className="text-faint">
+                      —
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </MotionReveal>
+          </div>
+
+          {/* ── The form ── */}
+          <div className="panel p-6 md:p-7">
+            {handedOff ? (
+              <div>
+                <p className="label">Handed off</p>
+                <h3 className="display-sm mt-3 text-xl text-paper">
+                  If your mail app opened, the draft is in it
+                </h3>
+                <p className="mt-3 text-[0.9375rem] leading-relaxed text-dim">
+                  Nothing was sent from this page, and nothing here can tell
+                  whether your browser had a mail handler. If no window
+                  appeared, copy the message and send it to{" "}
+                  <a
+                    href={`mailto:${profile.email}`}
+                    className="link-underline text-paper"
+                  >
+                    {profile.email}
+                  </a>
+                  .
+                </p>
+
+                {/* The draft is never destroyed — it stays here, selectable. */}
+                <pre className="mt-5 max-h-40 overflow-auto whitespace-pre-wrap border border-rule bg-void p-4 text-[0.8125rem] leading-relaxed text-dim">
+                  {plainMessage}
+                </pre>
+
+                <div className="mt-5 flex flex-wrap gap-3">
+                  <button
+                    type="button"
+                    onClick={copyMessage}
+                    className="border border-field px-4 py-2.5 transition-colors hover:bg-panel-2"
+                  >
+                    <span className="label !text-paper">
+                      {copiedMessage ? "Copied" : "Copy message"}
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setHandedOff(false);
+                      setFields(EMPTY);
+                    }}
+                    className="border border-rule px-4 py-2.5 transition-colors hover:bg-panel-2"
+                  >
+                    <span className="label">Start over</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={submit} noValidate className="space-y-5">
+                <div>
+                  <label htmlFor="name" className="label block">
+                    Name
+                  </label>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    value={fields.name}
+                    onChange={change}
+                    aria-invalid={!!errors.name}
+                    aria-describedby={errors.name ? "name-error" : undefined}
+                    className={`${inputBase} mt-2 ${
+                      errors.name ? "border-poor" : "border-field"
+                    }`}
+                  />
+                  {errors.name && (
+                    <p id="name-error" className="mt-2 text-[0.8125rem] text-poor">
+                      {errors.name}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="email" className="label block">
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={fields.email}
+                    onChange={change}
+                    aria-invalid={!!errors.email}
+                    aria-describedby={errors.email ? "email-error" : undefined}
+                    className={`${inputBase} mt-2 ${
+                      errors.email ? "border-poor" : "border-field"
+                    }`}
+                  />
+                  {errors.email && (
+                    <p
+                      id="email-error"
+                      className="mt-2 text-[0.8125rem] text-poor"
+                    >
+                      {errors.email}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="message" className="label block">
+                    Message
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={5}
+                    value={fields.message}
+                    onChange={change}
+                    aria-invalid={!!errors.message}
+                    aria-describedby={
+                      errors.message ? "message-error" : undefined
+                    }
+                    className={`${inputBase} mt-2 resize-y ${
+                      errors.message ? "border-poor" : "border-field"
+                    }`}
+                  />
+                  {errors.message && (
+                    <p
+                      id="message-error"
+                      className="mt-2 text-[0.8125rem] text-poor"
+                    >
+                      {errors.message}
+                    </p>
+                  )}
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-paper px-5 py-3.5 text-void transition-colors hover:bg-white"
+                >
+                  <span className="label !text-void">Open email draft</span>
+                </button>
+                <p className="label !normal-case !tracking-normal !text-faint">
+                  This opens your own mail app with the message ready. Nothing
+                  is sent from this page.
+                </p>
+              </form>
+            )}
+          </div>
         </div>
-      </MotionParallax>
-    </Section>
+      </div>
+    </section>
   );
 }

@@ -1,19 +1,19 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
-import { Inter, Sora } from "next/font/google";
+import { Archivo } from "next/font/google";
 import { profile } from "@/data/profile";
 
-const inter = Inter({
+/* One family for the whole site, self-hosted and subset to latin.
+   Archivo's wdth axis (62–125) covers every role: condensed for data labels,
+   normal for body, expanded for display. A second face for the measurements
+   would have cost more bytes than all of this page's JavaScript, on a site
+   whose argument is about weight. `tabular-nums` does the job a mono was
+   there for. */
+const archivo = Archivo({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-archivo",
   display: "swap",
-});
-
-const sora = Sora({
-  subsets: ["latin"],
-  variable: "--font-sora",
-  display: "swap",
-  weight: ["400", "500", "600", "700"],
+  axes: ["wdth"],
 });
 
 const title = `${profile.name} — ${profile.role}`;
@@ -32,14 +32,14 @@ export const metadata: Metadata = {
   keywords: [
     "Jordan Urbaez-Lu",
     "Senior Software Engineer",
-    "Frontend Engineer",
+    "Web Performance",
+    "Core Web Vitals",
     "React",
     "Next.js",
     "TypeScript",
     "GraphQL",
-    "Web Performance",
-    "Core Web Vitals",
-    "Portfolio",
+    "Walmart Global Tech",
+    "Frontend Architecture",
   ],
   openGraph: {
     type: "website",
@@ -62,17 +62,12 @@ export const metadata: Metadata = {
     description,
     images: ["/og.png"],
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
-  alternates: {
-    canonical: profile.siteUrl,
-  },
+  robots: { index: true, follow: true },
+  alternates: { canonical: profile.siteUrl },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#060812",
+  themeColor: "#08090a",
   colorScheme: "dark",
 };
 
@@ -82,8 +77,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${sora.variable}`}>
-      <body className="min-h-[100svh] antialiased scrollbar-thin">
+    <html lang="en" className={archivo.variable}>
+      <body className="min-h-[100svh] bg-void text-paper antialiased">
         {children}
       </body>
     </html>

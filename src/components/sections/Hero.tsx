@@ -1,115 +1,105 @@
-"use client";
-import React from "react";
-import { ArrowRight, Download, Mail } from "lucide-react";
-import { MotionReveal } from "@/components/animations/MotionReveal";
-import { Button } from "@/components/ui/Button";
-import { Section } from "@/components/ui/Section";
-import { HeadshotProgress } from "@/components/ui/HeadshotProgress";
-import { SocialLinks } from "@/components/ui/SocialLinks";
-import { StatBand } from "@/components/ui/StatBand";
-import { LogoStrip } from "@/components/ui/LogoStrip";
-import { profile } from "@/data/profile";
+import { Chroma } from "@/components/ui/Chroma";
+import { HeroConsole } from "@/components/instrument/HeroConsole";
+import { metrics, profile, scale } from "@/data/profile";
 
-export function Home({
-  registry,
-}: {
-  registry: React.RefObject<Record<string, HTMLElement | null>>;
-}) {
+export function Hero() {
   return (
-    <Section id="home" registry={registry} className="relative z-20 px-4">
-      {/* ── Identity block (top-padded to always clear the fixed nav) ── */}
-      <div className="flex flex-col items-center pt-24 pb-14 md:pt-32 md:pb-20">
-          <div className="mx-auto max-w-3xl text-center">
-            {/* Current-role chip */}
-            <MotionReveal direction="up" delay={0}>
-              <div className="mb-8 flex justify-center">
-                <span className="ring-aurora relative inline-flex items-center gap-2.5 rounded-full bg-white/[0.05] px-4 py-1.5 text-sm font-medium text-white/80 backdrop-blur-md">
-                  <span className="h-2 w-2 rounded-full bg-gradient-to-r from-indigo-400 to-violet-400 shadow-[0_0_10px_rgba(129,140,248,0.9)]" />
-                  {profile.role}
-                  <span className="h-3 w-px bg-white/20" />
-                  <span className="text-white/55">{profile.company}</span>
+    <section id="top" className="arrive px-4 pt-24 md:px-5 md:pt-32">
+      <div className="mx-auto max-w-[86rem]">
+        <p className="label">
+          {profile.role} · {profile.company} · {profile.location}
+        </p>
+
+        <div className="mt-8 grid gap-x-16 gap-y-12 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-end">
+          {/* ── The statement ── */}
+          <div>
+            <h1 className="register-in display-xl text-[clamp(2.15rem,7vw,6.25rem)]">
+              {profile.headline.map((line) => (
+                <span key={line} className="block">
+                  <Chroma>{line}</Chroma>
                 </span>
-              </div>
-            </MotionReveal>
+              ))}
+            </h1>
 
-            {/* Headshot */}
-            <MotionReveal direction="up" delay={60}>
-              <div className="mb-8 flex items-center justify-center">
-                <div className="relative">
-                  <div className="absolute -inset-6 rounded-full bg-gradient-to-tr from-indigo-500/30 via-cyan-400/20 to-violet-500/30 blur-2xl" />
-                  <div className="relative">
-                    <HeadshotProgress size={148} gap={8} border={2} trigger />
-                  </div>
-                </div>
-              </div>
-            </MotionReveal>
+            <p className="prose-body mt-8 max-w-[46ch]">{profile.lede}</p>
 
-            {/* Name */}
-            <MotionReveal direction="up" delay={120}>
-              <h1 className="font-display text-5xl font-semibold tracking-tight text-white md:text-7xl">
-                {profile.name}
-              </h1>
-            </MotionReveal>
-
-            {/* Value prop */}
-            <MotionReveal direction="up" delay={200}>
-              <p className="mx-auto mt-6 max-w-2xl text-[1.6rem] font-light leading-tight tracking-tight text-white/85 md:text-[2rem]">
-                <span className="text-aurora font-normal">Fast, resilient web</span>{" "}
-                at scale — and the{" "}
-                <span className="text-aurora font-normal">agentic AI</span> to ship it.
-              </p>
-            </MotionReveal>
-
-            {/* Supporting line */}
-            <MotionReveal direction="up" delay={260}>
-              <p className="mx-auto mt-5 max-w-xl text-base font-light leading-relaxed text-white/55">
-                {profile.heroLine}
-              </p>
-            </MotionReveal>
-
-            {/* CTAs */}
-            <MotionReveal direction="up" delay={340}>
-              <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-                <Button href="#contact" variant="primary" size="lg">
-                  <Mail size={18} />
-                  Get in touch
-                </Button>
-                <Button href="#experience" variant="glass" size="lg">
-                  View experience
-                  <ArrowRight size={18} />
-                </Button>
-                <Button
-                  as="a"
-                  href={profile.resumeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variant="outline"
-                  size="lg"
-                >
-                  <Download size={18} />
-                  Résumé
-                </Button>
-              </div>
-            </MotionReveal>
-
-            {/* Social row */}
-            <MotionReveal direction="up" delay={420}>
-              <div className="mt-8 flex justify-center">
-                <SocialLinks />
-              </div>
-            </MotionReveal>
+            <div className="mt-9 flex flex-wrap items-center gap-x-3 gap-y-2">
+              <a
+                href="#contact"
+                className="bg-paper px-5 py-3.5 text-void transition-colors hover:bg-white"
+              >
+                <span className="label !text-void">Get in touch</span>
+              </a>
+              <a
+                href={profile.resumeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border border-rule-lit px-5 py-3.5 text-paper transition-colors hover:bg-panel"
+              >
+                <span className="label !text-paper">Résumé ↗</span>
+              </a>
+              <a
+                href={profile.socials.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link-underline px-2 py-3.5 text-dim transition-colors hover:text-paper"
+              >
+                <span className="label !text-current">LinkedIn ↗</span>
+              </a>
+              <a
+                href={profile.socials.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link-underline px-2 py-3.5 text-dim transition-colors hover:text-paper"
+              >
+                <span className="label !text-current">GitHub ↗</span>
+              </a>
+            </div>
           </div>
-      </div>
 
-      {/* ── Proof band (clear separation from the identity block) ── */}
-      <div className="mx-auto max-w-5xl space-y-14 pb-10 pt-10 md:pt-4">
-        <MotionReveal direction="up">
-          <StatBand />
-        </MotionReveal>
-        <MotionReveal direction="up" delay={80}>
-          <LogoStrip />
-        </MotionReveal>
+          {/* ── The proof, set as a readout ── */}
+          <aside className="border-t border-rule pt-6 lg:border-t-0 lg:pt-0">
+            <p className="label">Measured impact</p>
+            <dl className="mt-5">
+              {metrics.map((m) => (
+                <div
+                  key={m.label}
+                  className="silkscreen flex items-baseline gap-4 py-4"
+                >
+                  <dt className="sr-only">{m.label}</dt>
+                  <dd className="flex w-[6rem] shrink-0 items-baseline gap-1">
+                    <span aria-hidden className="readout text-sm text-faint">
+                      {m.dir === "down" ? "↓" : "↑"}
+                    </span>
+                    <span className="readout text-[1.75rem] font-semibold leading-none tracking-tight text-paper">
+                      {m.value}
+                    </span>
+                    <span className="readout text-sm leading-none text-dim">
+                      {m.unit}
+                    </span>
+                  </dd>
+                  <p className="text-[0.9375rem] leading-snug text-dim">
+                    {m.label}
+                  </p>
+                </div>
+              ))}
+            </dl>
+          </aside>
+        </div>
+
+        {/* ── The console: the instruments, as controls, above the fold. ── */}
+        <HeroConsole />
+
+        {/* ── Scale, stated once ── */}
+        <div className="mt-14 grid gap-px border border-rule bg-rule sm:grid-cols-3">
+          {scale.map((s) => (
+            <div key={s.label} className="bg-void px-5 py-6">
+              <p className="display-sm text-xl text-paper">{s.value}</p>
+              <p className="label mt-2">{s.label}</p>
+            </div>
+          ))}
+        </div>
       </div>
-    </Section>
+    </section>
   );
 }

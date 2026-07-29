@@ -1,63 +1,90 @@
-export type SkillLevel = "Expert" | "Proficient" | "Familiar";
-
-export interface Skill {
-  name: string;
-  level: SkillLevel;
-  icon?: string; // key consumed by BrandIcon (optional; falls back if missing)
-}
+// src/data/skills.ts
+// ─────────────────────────────────────────────────────────────────────────
+// Grouped by what the tools are *for*, not by self-assessed proficiency —
+// a senior engineer's stack is a set of choices, not a set of star ratings.
+// Set in type only: brand logo grids cost bundle and say nothing.
+// ─────────────────────────────────────────────────────────────────────────
 
 export interface SkillGroup {
+  code: string;
   title: string;
-  items: Skill[];
+  /** One line on what this group is used to do. */
+  note: string;
+  items: string[];
 }
 
 export const skillGroups: SkillGroup[] = [
   {
-    title: "Frontend",
+    code: "FE",
+    title: "Interface",
+    note: "What the member actually touches.",
     items: [
-      { name: "React", level: "Expert", icon: "react" },
-      { name: "Next.js", level: "Expert", icon: "next.js" },
-      { name: "TypeScript", level: "Expert", icon: "typescript" },
-      { name: "Core Web Vitals", level: "Proficient" }, // conceptual -> fallback
-      { name: "GraphQL", level: "Expert", icon: "graphql" },
+      "React",
+      "Next.js",
+      "TypeScript",
+      "GraphQL",
+      "React Query",
+      "Redux",
+      "Tailwind",
+      "SCSS",
+      "Storybook",
+      "Accessibility",
     ],
   },
   {
-    title: "Backend & DevOps",
+    code: "PF",
+    title: "Performance",
+    note: "Where the 45% came from.",
     items: [
-      { name: "Java", level: "Familiar", icon: "java" },
-      { name: "Node.js", level: "Proficient", icon: "node.js" },
-      { name: "Express", level: "Proficient", icon: "express" },
-      { name: "Go", level: "Proficient", icon: "go" },
-      { name: "Rest", level: "Familiar" }, // conceptual -> fallback
-      { name: "Docker", level: "Familiar", icon: "docker" },
-      { name: "Github Actions", level: "Expert", icon: "github actions" },
+      "Core Web Vitals",
+      "LCP · INP · CLS",
+      "Performance profiling",
+      "SSR / CSR strategy",
+      "Code splitting",
+      "Caching & prefetching",
+      "A/B testing",
+      "Component abstraction",
     ],
   },
   {
-    title: "Tooling & Testing",
+    code: "BE",
+    title: "Services",
+    note: "The data the interface waits on.",
     items: [
-      { name: "Jest", level: "Proficient", icon: "jest" },
-      { name: "Jenkins", level: "Familiar", icon: "jenkins" },
-      {
-        name: "React Testing Lib",
-        level: "Familiar",
-        icon: "react testing lib",
-      },
+      "Node.js",
+      "Express",
+      "Java Spring Boot",
+      "REST APIs",
+      "PostgreSQL",
+      "MongoDB",
+      "SQL",
+      "Go",
     ],
   },
   {
-    title: "Other",
+    code: "OPS",
+    title: "Platform",
+    note: "Getting it out and watching it run.",
     items: [
-      {
-        name: "LLMs",
-        level: "Proficient",
-        icon: "llms / neural nets",
-      },
-      { name: "C/C++", level: "Expert", icon: "c/c++ (embedded)" },
-      { name: "Python", level: "Expert", icon: "python" },
-      { name: "Agile/Scrum", level: "Proficient" }, // conceptual -> fallback
-      { name: "CI/CD", level: "Expert" }, // conceptual -> fallback
+      "Docker",
+      "Kubernetes",
+      "Jenkins",
+      "CI/CD",
+      "Nx",
+      "Grafana",
+      "Prometheus",
+      "Git",
+    ],
+  },
+  {
+    code: "AI",
+    title: "Applied AI",
+    note: "Shipped to production, not a demo.",
+    items: [
+      "Agentic tooling",
+      "LLM-driven workflows",
+      "Incident triage automation",
+      "Predictive billing models",
     ],
   },
 ];
