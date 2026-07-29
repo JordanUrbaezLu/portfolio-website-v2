@@ -1,90 +1,101 @@
 // src/data/profile.ts
 // ─────────────────────────────────────────────────────────────────────────
-// Single source of truth for identity, contact, social links, and the
-// recruiter-facing "proof" content (impact metrics + companies).
-//
-//  ▸▸ ACTION REQUIRED — swap the two placeholders below ◂◂
-//     1. profile.socials.linkedin  → your real LinkedIn URL
-//     2. profile.resumeUrl         → drop your PDF at /public and update path
-//  Everything else is wired and live.
+// Identity, contact, and the headline proof. Every number here comes from
+// the résumé at /public/Jordan_Urbaez_Lu_Resume.pdf — keep them in sync.
 // ─────────────────────────────────────────────────────────────────────────
 
 export interface SocialLink {
   label: string;
   href: string;
-  /** lucide-react icon name handled in SocialLinks.tsx */
-  icon: "linkedin" | "github" | "mail" | "phone";
+  icon: "linkedin" | "github" | "mail";
 }
 
+/** A measurement. `value` and `unit` are set in mono; `label` explains it. */
 export interface Metric {
   value: string;
+  unit?: string;
   label: string;
-}
-
-export interface CompanyTenure {
-  name: string;
-  /** short note shown under the wordmark */
-  note: string;
+  /** Direction of the change, so the arrow never contradicts the number. */
+  dir?: "down" | "up";
 }
 
 export const profile = {
   name: "Jordan Urbaez-Lu",
   firstName: "Jordan",
   lastName: "Urbaez-Lu",
-  role: "Senior Software Engineer",
+  initials: "JU",
+  role: "Senior Lead Software Engineer",
   company: "Walmart Global Tech",
 
-  // Big hero value prop (rendered with aurora highlights in Hero.tsx).
-  headline: "Fast, resilient web at scale — and the agentic AI to ship it.",
+  /** Hero headline, split so the line breaks are set rather than reflowed. */
+  headline: ["I make the web", "fast for tens", "of millions."],
 
-  // Short supporting line under the hero headline.
-  heroLine:
-    "Leading the Walmart+ Payments & Account Management web platform — and building agentic AI for developer productivity at scale.",
+  /** The claim the whole page is built to prove. */
+  lede: "I lead the Walmart+ web platform — membership, account and payments for tens of millions of members, at hundreds of millions of page views a month. I took P75 page latency down 45%.",
 
-  // SEO / OpenGraph description.
+  /** The hero console rows. Named after what each control actually does —
+      main-thread blocking, not network latency. The distinction is the whole
+      reason any of it is believable. */
+  invitation:
+    "Put real load on this page's main thread — genuine long tasks, not a filter. Try to use the page while it's on. That gap is what INP measures, and closing it is most of my job.",
+  invitation2:
+    "The page can draw its own schematic: live geometry, every byte it shipped, and the exact element the browser crowned as LCP.",
+  invitation3:
+    "Or watch this session's own load again, slowed down — every timestamp measured, none of it staged.",
+
   subhead:
-    "Senior Software Engineer at Walmart Global Tech — leading the Walmart+ Payments & Account Management web platform, improving performance and retention for millions, and building agentic AI for developer productivity.",
+    "Senior Lead Software Engineer at Walmart Global Tech. I lead the Walmart+ web platform — membership, account and payments for tens of millions of members — and cut P75 page latency by 45%.",
 
-  // Top-level focus areas (hero pills + about).
-  focusAreas: ["Web Performance", "Agentic AI", "React · Next.js · TypeScript"],
-
-  location: "Santa Clara, CA",
+  location: "Sunnyvale, CA",
   email: "jordana.urbaez@gmail.com",
-  phone: "123-456-7891",
-  phoneHref: "tel:1234567891",
+  phone: "(978) 289-7135",
+  phoneHref: "tel:+19782897135",
 
-  // Used for SEO / OpenGraph canonical URL. Swap for your production domain.
   siteUrl: "https://jordan-urbaez-lu.vercel.app",
-
-  // Real résumé (lives in /public).
   resumeUrl: "/Jordan_Urbaez_Lu_Resume.pdf",
 
   socials: {
-    // PLACEHOLDER — replace with your real LinkedIn profile URL.
     linkedin: "https://www.linkedin.com/in/jordan-urbaez-lu/",
     github: "https://github.com/JordanUrbaezLu",
   },
 } as const;
 
-// Hero / footer social row.
 export const socialLinks: SocialLink[] = [
   { label: "LinkedIn", href: profile.socials.linkedin, icon: "linkedin" },
   { label: "GitHub", href: profile.socials.github, icon: "github" },
   { label: "Email", href: `mailto:${profile.email}`, icon: "mail" },
 ];
 
-// Above-the-fold credibility band.
+/** Above-the-fold proof. Four measurements, set like a readout. */
 export const metrics: Metric[] = [
-  { value: "75%+", label: "Core Web Vitals gains on Walmart.com" },
-  { value: "Millions", label: "Walmart+ users served in production" },
-  { value: "7+", label: "Years building for the web" },
-  { value: "Agentic AI", label: "Systems built for developer productivity" },
+  {
+    value: "45",
+    unit: "%",
+    label: "P75 page latency removed from Walmart+",
+    dir: "down",
+  },
+  {
+    value: "75",
+    unit: "%+",
+    label: "LCP, FCP and INP improved on P0/P1 pages",
+    dir: "up",
+  },
+  { value: "15", unit: "%", label: "Membership renewals gained", dir: "up" },
+  { value: "3", unit: "%", label: "Membership churn reduced", dir: "down" },
 ];
 
-// "Experience at" wordmark strip — instant social proof.
-export const companies: CompanyTenure[] = [
-  { name: "Walmart", note: "Global Tech" },
-  { name: "Meltwater", note: "Analytics" },
-  { name: "BeyondTrust", note: "Security" },
-  { name: "Drift", note: "Marketing" },
+/** Conversation openers for the contact section. Each one is a real story
+    from the résumé, so a hiring manager can start a specific conversation
+    instead of a generic one. */
+export const askAbout = [
+  "The Node/TypeScript/GraphQL data-fetching rearchitecture behind the 45% P75 win",
+  "Running the A/B programme that moved renewals 15% and churn 3%",
+  "Putting agentic AI into production: incident triage, and models that reschedule a renewal before a card fails",
+];
+
+/** Scale facts — stated once, in the reader's units, not engineering's. */
+export const scale = [
+  { value: "Tens of millions", label: "active members served" },
+  { value: "Hundreds of millions", label: "page views + API calls / month" },
+  { value: "7+ years", label: "shipping for the web" },
 ];
